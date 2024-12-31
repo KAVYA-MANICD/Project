@@ -1,0 +1,114 @@
+/* Centering the container */
+/* body {
+    background-image: url('/invoice.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+   */
+
+   body {
+    background-image: url('/invoice10png.png');
+    background-repeat: no-repeat;
+    /* background-size: cover; */
+   background-position: center;
+    height: 100vh; 
+    margin: 0; 
+    display: flex;
+    /* align-items: center; 
+    justify-content: center;  */
+}
+
+.login-container {
+    margin-top: 230px;
+    margin-left: 780px;
+    max-width: 500px;
+    width: 100%; /* Ensure the container takes full available width up to the max-width */
+    padding: 20px;
+    height: 310px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+  /* Title styling */
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  /* Form group styling */
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 20px;
+    color: #0d0b0b;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  input:focus {
+    border-color: #007bff;
+  }
+  
+  /* Submit button styling */
+  .btn-submit {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-submit:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+  
+  .btn-submit:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+  
+  /* Error message styling */
+  .error-message {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .error small {
+    color: red;
+  }
+  

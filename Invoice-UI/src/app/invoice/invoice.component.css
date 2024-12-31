@@ -1,0 +1,249 @@
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7fa;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Form Elements */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  input[type="date"] {
+    width: 100%;
+    padding: 14px 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    background-color: #f9fafb;
+  }
+  
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  input[type="date"]:focus {
+    border-color: #4CAF50;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+    outline: none;
+  }
+  
+  /* Buttons Container: Align buttons in the same row */
+  .buttons-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  button {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 140px;
+  }
+  
+  button:hover {
+    transform: translateY(-2px);
+  }
+  
+  button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #218838;
+  }
+  
+  button.bg-blue {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  button.bg-blue:hover {
+    background-color: #0069d9;
+  }
+  
+  button.bg-gray {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  button.bg-gray:hover {
+    background-color: #5a6268;
+  }
+  
+  button.text-red {
+    background: none;
+    color: #dc3545;
+    font-size: 18px;
+  }
+  
+  button.text-red:hover {
+    color: #bd2130;
+  }
+  
+  /* Grid Layouts */
+  .grid {
+    display: grid;
+    gap: 20px;
+  }
+  
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .grid-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  
+  .grid-4 {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+  
+  @media (max-width: 768px) {
+    .grid-2,
+    .grid-4 {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Totals */
+  .totals {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 16px;
+  }
+  
+  .totals span {
+    margin: 5px 0;
+  }
+  
+  .totals span.bold {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  /* Headings */
+  h2 {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #343a40;
+  }
+  
+  h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-top: 20px;
+    color: #495057;
+  }
+  
+  /* Spacing */
+  .mt-4 {
+    margin-top: 16px;
+  }
+  
+  .mt-8 {
+    margin-top: 32px;
+  }
+  
+  .mb-4 {
+    margin-bottom: 16px;
+  }
+  
+  .mb-8 {
+    margin-bottom: 32px;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 24px;
+  }
+  
+  /* Input Groups for Items */
+  .grid-cols-12 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+  
+  input[type="text"]:disabled,
+  input[type="number"]:disabled,
+  input[type="date"]:disabled {
+    background-color: #f1f1f1;
+    cursor: not-allowed;
+  }
+  
+  span.p-2 {
+    padding: 12px 20px;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+    font-size: 16px;
+  }
+  
+  /* Button for Add Item */
+  button.add-item {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+    min-width: 140px;
+  }
+  
+  button.add-item:hover {
+    background-color: #0069d9;
+  }
+  
+  button.remove-item {
+    color: #e53e3e;
+    font-size: 18px;
+    background: none;
+    cursor: pointer;
+  }
+  
+  /* Small adjustments for responsive design */
+  @media (max-width: 768px) {
+    .container {
+      padding: 20px;
+    }
+  
+    .grid-2 {
+      grid-template-columns: 1fr;
+    }
+  
+    .grid-3 {
+      grid-template-columns: 1fr;
+    }
+  
+    .grid-4 {
+      grid-template-columns: 1fr;
+    }
+  
+    .buttons-container {
+      flex-direction: column;
+    }
+  }
+  

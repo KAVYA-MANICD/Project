@@ -1,0 +1,310 @@
+<!-- <div class="container mx-auto p-4">
+    <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <div class="bg-white p-6 rounded-lg shadow">
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <input 
+              type="text" 
+              formControlName="companyName"
+              placeholder="Your Company Name"
+              class="w-full p-2 border rounded"
+            />
+          </div>
+          <div>
+            <input 
+              type="text" 
+              formControlName="companyAddress"
+              placeholder="Your Company Address"
+              class="w-full p-2 border rounded"
+            />
+          </div>
+        </div>
+
+       
+        <div class="mt-6 grid grid-cols-2 gap-4">
+          <div>
+            <input 
+              type="text" 
+              formControlName="clientName"
+              placeholder="Client Name"
+              class="w-full p-2 border rounded"
+            />
+          </div>
+          <div>
+            <input 
+              type="text" 
+              formControlName="clientAddress"
+              placeholder="Client Address"
+              class="w-full p-2 border rounded"
+            />
+          </div>
+        </div>
+
+       
+        <div class="mt-6 grid grid-cols-2 gap-4">
+          <div>
+            <input 
+              type="text" 
+              formControlName="invoiceNumber"
+              placeholder="Invoice Number"
+              class="w-full p-2 border rounded"
+            />
+          </div>
+          <div>
+            <input 
+              type="date" 
+              formControlName="invoiceDate"
+              class="w-full p-2 border rounded"
+            />
+          </div>
+        </div>
+
+        
+        <div class="mt-6">
+          <div formArrayName="items" class="space-y-4">
+            <div *ngFor="let item of items.controls; let i=index" [formGroupName]="i"
+              class="grid grid-cols-12 gap-4">
+              <div class="col-span-5">
+                <input 
+                  type="text" 
+                  formControlName="description"
+                  placeholder="Item Description"
+                  class="w-full p-2 border rounded"
+                />
+              </div>
+              <div class="col-span-2">
+                <input 
+                  type="number" 
+                  formControlName="price"
+                  placeholder="Price"
+                  class="w-full p-2 border rounded"
+                />
+              </div>
+              <div class="col-span-2">
+                <input 
+                  type="number" 
+                  formControlName="quantity"
+                  placeholder="Qty"
+                  class="w-full p-2 border rounded"
+                />
+              </div>
+              <div class="col-span-2">
+                <span class="p-2">
+                  ${{item.get('price')?.value * item.get('quantity')?.value || 0}}
+                </span>
+              </div>
+              <div class="col-span-1">
+                <button type="button" (click)="removeItem(i)" class="text-red-500">
+                  ✕
+                </button>
+              </div>
+            </div>
+          </div>
+          <button type="button" (click)="addItem()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+            Add Item
+          </button>
+        </div>
+
+        
+        <div class="mt-6 flex justify-end">
+          <div class="w-64">
+            <div class="flex justify-between">
+              <span>Subtotal:</span>
+              <span>${{calculateSubTotal()}}</span>
+            </div>
+            <div class="flex justify-between mt-2">
+              <span>Total:</span>
+              <span class="font-bold">${{calculateTotal()}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-between">
+          <button type="submit" class="px-6 py-2 bg-green-500 text-white rounded">
+            Generate Invoice
+          </button>
+          <div class="space-x-4">
+            <button type="button" (click)="downloadPDF()" class="px-4 py-2 bg-blue-500 text-white rounded">
+              Download PDF
+            </button>
+            <button type="button" (click)="downloadCSV()" class="px-4 py-2 bg-gray-500 text-white rounded">
+              Download CSV
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div> -->
+
+
+
+
+  <div class="container mx-auto p-6 max-w-4xl">
+    <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="space-y-8">
+      <div class="bg-white p-8 rounded-lg shadow-lg">
+        <!-- Company Details -->
+        <h2 class="text-2xl font-bold mb-6 text-gray-700">Invoice Details</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <input 
+              type="text" 
+              formControlName="companyName"
+              placeholder="Your Company Name"
+              class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <input 
+              type="text" 
+              formControlName="companyAddress"
+              placeholder="Your Company Address"
+              class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+  
+        <!-- Client Details -->
+        <h3 class="text-xl font-semibold mt-8 text-gray-700">Client Details</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+          <div>
+            <input 
+              type="text" 
+              formControlName="clientName"
+              placeholder="Client Name"
+              class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <input 
+              type="text" 
+              formControlName="clientAddress"
+              placeholder="Client Address"
+              class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+  
+        <!-- Invoice Details -->
+        <h3 class="text-xl font-semibold mt-8 text-gray-700">Invoice Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+          <div>
+            <input 
+              type="text" 
+              formControlName="invoiceNumber"
+              placeholder="Invoice Number"
+              class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <input 
+              type="date" 
+              formControlName="invoiceDate"
+              class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+  
+        <!-- Items -->
+        <h3 class="text-xl font-semibold mt-8 text-gray-700">Items</h3>
+        <div formArrayName="items" class="space-y-6 mt-4">
+          <div *ngFor="let item of items.controls; let i=index" [formGroupName]="i" class="grid grid-cols-12 gap-4">
+            <div class="col-span-12 md:col-span-5">
+              <input 
+                type="text" 
+                formControlName="description"
+                placeholder="Item Description"
+                class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div class="col-span-6 md:col-span-2">
+              <input 
+                type="number" 
+                formControlName="price"
+                placeholder="Price"
+                class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div class="col-span-6 md:col-span-2">
+              <input 
+                type="number" 
+                formControlName="quantity"
+                placeholder="Qty"
+                class="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div class="col-span-6 md:col-span-2 flex items-center">
+              <span class="p-2 font-medium text-gray-700">
+                ${{item.get('price')?.value * item.get('quantity')?.value || 0}}
+              </span>
+            </div>
+            <div class="col-span-6 md:col-span-1 flex items-center">
+              <button type="button" (click)="removeItem(i)" class="text-red-500 hover:text-red-700">
+                ✕
+              </button>
+            </div>
+          </div>
+          <button 
+            type="button" 
+            (click)="addItem()" 
+            class="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Add Item
+          </button>
+        </div>
+  
+        <!-- Totals -->
+        <div class="mt-8 flex justify-end">
+          <div class="w-full md:w-64 text-right">
+            <div class="flex justify-between text-gray-700 font-medium">
+              <span>Subtotal:</span>
+              <span>${{calculateSubTotal()}}</span>
+            </div>
+            <div class="flex justify-between mt-2 text-gray-800 font-bold">
+              <span>Total:</span>
+              <span>${{calculateTotal()}}</span>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Buttons -->
+        <!-- <div class="mt-8 flex justify-between">
+          <button type="submit" class="px-6 py-3 bg-green-500 text-white rounded hover:bg-green-600">
+            Generate Invoice
+          </button>
+          <div class="space-x-4">
+            <button 
+              type="button" 
+              (click)="downloadPDF()" 
+              class="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600">
+              Download PDF
+            </button>
+            <button 
+              type="button" 
+              (click)="downloadCSV()" 
+              class="px-6 py-3 bg-gray-500 text-white rounded hover:bg-gray-600">
+              Download CSV
+            </button>
+          </div>
+        </div> -->
+
+
+
+        <div class="mt-6 flex justify-between">
+            <div class="buttons-container">
+            <button type="submit" class="px-6 py-2 bg-green-500 text-white rounded">
+              Generate Invoice
+            </button>
+            
+              <button type="button" (click)="downloadPDF()" class="px-4 py-2 bg-blue-500 text-white rounded">
+                Download PDF
+              </button>
+              <button type="button" (click)="downloadCSV()" class="px-4 py-2 bg-gray-500 text-white rounded">
+                Download CSV
+              </button>
+            </div>
+          </div>
+          
+      </div>
+    </form>
+  </div>
+  
