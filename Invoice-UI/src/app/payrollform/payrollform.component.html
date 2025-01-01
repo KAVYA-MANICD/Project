@@ -1,0 +1,184 @@
+<!-- <div class="container">
+    
+    <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="loading" class="mb-4 p-4 bg-blue-100 text-blue-700 rounded">
+      Processing...
+    </div>
+  
+  
+    <form [formGroup]="payrollForm" (ngSubmit)="onSubmit()" class="bg-white p-8 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-bold mb-6 text-gray-700">Employee Payroll Invoice</h2>
+      
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label>Employee Name</label>
+          <input type="text" formControlName="employeeName"/>
+          <div *ngIf="isFieldInvalid('employeeName')" class="text-red-500">
+            Employee name is required
+          </div>
+        </div>
+        
+        <div>
+          <label>Employee ID</label>
+          <input type="text" formControlName="employeeId"/>
+          <div *ngIf="isFieldInvalid('employeeId')" class="text-red-500">
+            Employee ID is required
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="mt-6">
+        <label>Basic Salary</label>
+        <input type="number" formControlName="basicSalary"/>
+        <div *ngIf="isFieldInvalid('basicSalary')" class="text-red-500">
+          Valid basic salary is required
+        </div>
+      </div>
+  
+     
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div>
+          <label>Allowance Type</label>
+          <select formControlName="allowanceType">
+            <option value="">Select Type</option>
+            <option *ngFor="let type of allowanceTypes" [value]="type">{{type}}</option>
+          </select>
+        </div>
+        
+        <div>
+          <label>Allowance Amount</label>
+          <input type="number" formControlName="allowanceAmount"/>
+        </div>
+      </div>
+  
+      
+      <div class="mt-6">
+        <label>Deductions</label>
+        <input type="number" formControlName="deductions"/>
+      </div>
+  
+     
+      <div class="mt-6 flex justify-end">
+        <div class="text-right">
+          <span class="text-lg font-bold">Total Amount: ${{calculateTotal()}}</span>
+        </div>
+      </div>
+  
+     
+      <button 
+        type="submit"
+        [disabled]="!payrollForm.valid || loading"
+        class="mt-6">
+        {{ loading ? 'Processing...' : 'Submit Payroll' }}
+      </button>
+    </form>
+  </div> -->
+
+  <div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidemenu">
+      <ul>
+        <li><a routerLink="/home"><i class="fa fa-home"></i> Home</a></li>
+        <li><a routerLink="/compinvoice"><i class="fa fa-file-invoice"></i> Client Invoice</a></li>
+        <li><a routerLink="/salinvoice"><i class="fa fa-file-invoice-dollar"></i> Salary Invoice</a></li>
+        <li><a routerLink="/payrollform"><i class="fa fa-file-invoice-dollar"></i> Company Invoice</a></li>
+      </ul>
+    </div>
+  
+   
+
+      <div class="content">
+        
+     <!-- <div class="content">
+     
+      <div class="topbar">
+        <div class="topbar-content">
+          <span >Invoice Management System</span>
+          <div class="topbar-buttons">
+            <button class="btn" (click)="logout()">Logout</button>
+          </div>
+        </div>
+      </div> -->
+     
+  <div class="container1">
+    <div class="form-container">
+      <h2 class="form-title">Employee Payroll Invoice</h2>
+  
+      <div *ngIf="successMessage" class="message success">
+        <i class="fas fa-check-circle"></i> {{ successMessage }}
+      </div>
+  
+      <div *ngIf="errorMessage" class="message error">
+        <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
+      </div>
+  
+      <div *ngIf="loading" class="message loading">
+        <i class="fas fa-spinner fa-spin"></i> Processing...
+      </div>
+  
+      <form [formGroup]="payrollForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="employeeName">Employee Name</label>
+          <input type="text" id="employeeName" formControlName="employeeName" class="form-input">
+          <div *ngIf="isFieldInvalid('employeeName')" class="error-message">
+            Employee name is required
+          </div>
+        </div>
+  
+        <div class="form-row">
+          <div class="form-group">
+            <label for="employeeId">Employee ID</label>
+            <input type="text" id="employeeId" formControlName="employeeId" class="form-input">
+            <div *ngIf="isFieldInvalid('employeeId')" class="error-message">
+              Employee ID is required
+            </div>
+          </div>
+
+          <!-- <div class="form-group">
+            <label for="allowanceType">Allowance Type</label>
+            <select id="allowanceType" formControlName="allowanceType" class="form-input">
+              <option value="">Select Type</option>
+              <option *ngFor="let type of allowanceTypes" [value]="type">{{type}}</option>
+            </select>
+          </div> -->
+  
+          <div class="form-group">
+            <label for="basicSalary">Basic Salary</label>
+            <input type="number" id="basicSalary" formControlName="basicSalary" class="form-input">
+            <div *ngIf="isFieldInvalid('basicSalary')" class="error-message">
+              Valid basic salary is required
+            </div>
+          </div>
+        </div>
+  
+       
+  
+        <div class="form-group">
+          <label for="allowanceAmount">Allowance Amount</label>
+          <input type="number" id="allowanceAmount" formControlName="allowanceAmount" class="form-input">
+        </div>
+  
+        <div class="form-group">
+          <label for="deductions">Deductions</label>
+          <input type="number" id="deductions" formControlName="deductions" class="form-input">
+        </div>
+  
+        <div class="total-container">
+          Total Amount: ${{calculateTotal()}}
+        </div>
+  
+        <button type="submit" [disabled]="!payrollForm.valid || loading" class="submit-btn">
+          {{ loading ? 'Processing...' : 'Submit Payroll' }}
+        </button>
+      </form>
+    </div>
+  </div>
+  </div>
+  </div>

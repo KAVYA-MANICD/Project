@@ -1,0 +1,135 @@
+<!-- <div class="container">
+    <div *ngIf="loading" class="mb-4 p-4 bg-blue-100 text-blue-700 rounded">
+      Loading payroll records...
+    </div>
+    
+    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+      {{ errorMessage }}
+    </div>
+  
+    <div class="bg-white p-8 rounded-lg shadow-lg overflow-x-auto">
+      <h2 class="text-2xl font-bold mb-6 text-gray-700">Payroll Records</h2>
+      <table class="min-w-full table-auto">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="px-4 py-2 text-left">Employee</th>
+            <th class="px-4 py-2 text-left">ID</th>
+            <th class="px-4 py-2 text-right">Basic Salary</th>
+            <th class="px-4 py-2 text-right">Allowance</th>
+            <th class="px-4 py-2 text-right">Deductions</th>
+            <th class="px-4 py-2 text-right">Total</th>
+            <th class="px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payroll of payrolls" class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2">{{payroll.employeeName}}</td>
+            <td class="px-4 py-2">{{payroll.employeeId}}</td>
+            <td class="px-4 py-2 text-right">${{payroll.basicSalary}}</td>
+            <td class="px-4 py-2 text-right">${{payroll.allowanceAmount}}</td>
+            <td class="px-4 py-2 text-right">${{payroll.deductions}}</td>
+            <td class="px-4 py-2 text-right">${{payroll.totalAmount}}</td>
+            <td class="px-4 py-2">
+              <button 
+                (click)="deletePayroll(payroll.id!)"
+                class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div> -->
+
+  <div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidemenu">
+      <ul>
+        <li><a routerLink="/home"><i class="fa fa-home"></i> Home</a></li>
+        <li><a routerLink="/compinvoice"><i class="fa fa-file-invoice"></i> Client Invoice</a></li>
+        <li><a routerLink="/salinvoice"><i class="fa fa-file-invoice-dollar"></i> Salary Invoice</a></li>
+        <li><a routerLink="/payrollform"><i class="fa fa-file-invoice-dollar"></i> Company Invoice</a></li>
+      </ul>
+    </div>
+  
+   
+
+      <div class="content">
+
+
+
+  <div class="container1">
+   
+    <div *ngIf="loading" class="mb-4 p-4 bg-blue-100 text-blue-700 rounded">
+      Loading payroll records...
+    </div>
+    
+    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+      {{ errorMessage }}
+    </div>
+  
+    <div class="bg-white p-8 rounded-lg shadow-lg overflow-x-auto">
+      <h2 class="text-2xl font-bold mb-6 text-gray-700">Payroll Records</h2>
+      
+    
+      <!-- <button 
+        (click)="generateInvoice()"
+        class="mb-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded">
+        Generate Invoice
+      </button> -->
+      <!-- <button 
+        (click)="downloadPDF()"
+        class="mb-4 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded">
+        Generate Invoice
+      </button>
+      <button 
+        (click)="downloadCSV()"
+        class="mb-4 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded">
+        Download CSV
+      </button> -->
+  
+     
+      <table class="min-w-full table-auto">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="px-4 py-2 text-left">Employee</th>
+            <th class="px-4 py-2 text-left">ID</th>
+            <th class="px-4 py-2 text-right">Basic Salary</th>
+            <th class="px-4 py-2 text-right">Allowance</th>
+            <th class="px-4 py-2 text-right">Deductions</th>
+            <th class="px-4 py-2 text-right">Total</th>
+            <th class="px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payroll of payrolls" class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2">{{payroll.employeeName}}</td>
+            <td class="px-4 py-2">{{payroll.employeeId}}</td>
+            <td class="px-4 py-2 text-right">${{payroll.basicSalary}}</td>
+            <td class="px-4 py-2 text-right">${{payroll.allowanceAmount}}</td>
+            <td class="px-4 py-2 text-right">${{payroll.deductions}}</td>
+            <td class="px-4 py-2 text-right">${{payroll.totalAmount}}</td>
+            <td class="px-4 py-2">
+              <button 
+                (click)="deletePayroll(payroll.id!)"
+                class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded">
+                Delete
+              </button>
+              <button 
+        (click)="downloadPDF()"
+        class="mb-4 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded">
+        Generate Invoice
+      </button>
+      <button 
+        (click)="downloadCSV()"
+        class="mb-4 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded">
+        Download CSV
+      </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

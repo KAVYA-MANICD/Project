@@ -1,0 +1,58 @@
+<div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidemenu">
+      <ul>
+        <li><a routerLink="/home"><i class="fa fa-home"></i> Home</a></li>
+        <li><a routerLink="/compinvoice"><i class="fa fa-file-invoice"></i> Client Invoice</a></li>
+        <li><a routerLink="/salinvoice"><i class="fa fa-file-invoice-dollar"></i> Salary Invoice</a></li>
+        <li><a routerLink="/payroll"><i class="fa fa-file-invoice-dollar"></i> Company Invoice</a></li>
+      </ul>
+    </div>
+  
+    <!-- Main Content Area -->
+    <div class="content">
+      <!-- Top Menu Bar inside content -->
+      <div class="topbar">
+        <div class="topbar-content">
+          <span >Invoice Management System</span>
+          <div class="topbar-buttons">
+            <button class="btn" (click)="logout()">Logout</button>
+          </div>
+        </div>
+      </div>
+  
+      <h1>Welcome to the Invoice Management System</h1>
+      <p>Select an option from the sidebar to proceed.</p>
+  
+      <!-- Invoice information content -->
+      <div class="intro">
+        <h2>About Invoice Management</h2>
+        <p>
+          Invoicing is an essential part of business operations, helping companies track payments, manage cash flow, and ensure timely compensation for goods and services provided. Our Invoice Management System allows you to manage company and salary invoices with ease, making it simpler for businesses and employees alike to stay organized.
+        </p>
+      </div>
+  
+      <div class="section">
+        <h3>Client Invoice</h3>
+        <p>
+          The <strong>Client Invoice</strong> section is designed to help businesses issue, track, and manage invoices for products or services sold to clients. You can create new invoices, view pending or paid invoices, and track payment statuses easily.
+        </p>
+      </div>
+  
+      <div class="section">
+        <h3>Salary Invoice</h3>
+        <p>
+          The <strong>Salary Invoice</strong> section allows businesses to manage salary payments for employees. You can generate invoices detailing the salary breakdown, including deductions, bonuses, and other financial elements related to employee compensation.
+        </p>
+      </div>
+  
+      <!-- <div class="cta"> -->
+        <!-- <div class="section">
+        <h3>Get Started</h3>
+        <p>
+          Ready to get started? Select an option from the sidebar to manage company or salary invoices, or learn more about your current invoice statuses.
+        </p>
+      </div> -->
+    </div>
+  </div>
+  

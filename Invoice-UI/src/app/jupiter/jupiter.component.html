@@ -1,0 +1,83 @@
+<!-- expense-invoice.component.html -->
+<div class="expense-container">
+    <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()">
+      <h2>Company Expense Invoice</h2>
+  
+      <div class="form-group">
+        <label for="invoiceNumber">Invoice Number</label>
+        <input
+          id="invoiceNumber"
+          type="text"
+          formControlName="invoiceNumber"
+          placeholder="Enter invoice number"
+          class="form-control"
+        />
+        <div class="error-message" *ngIf="expenseForm.get('invoiceNumber')?.touched && expenseForm.get('invoiceNumber')?.invalid">
+          Invoice number is required
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="expenseType">Expense Type</label>
+        <select
+          id="expenseType"
+          formControlName="expenseType"
+          class="form-control"
+        >
+          <option value="">Select expense type</option>
+          <option *ngFor="let type of expenseTypes" [value]="type.value">
+            {{type.label}}
+          </option>
+        </select>
+        <div class="error-message" *ngIf="expenseForm.get('expenseType')?.touched && expenseForm.get('expenseType')?.invalid">
+          Expense type is required
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="amount">Amount</label>
+        <input
+          id="amount"
+          type="number"
+          formControlName="amount"
+          placeholder="Enter amount"
+          class="form-control"
+          min="0"
+        />
+        <div class="error-message" *ngIf="expenseForm.get('amount')?.touched && expenseForm.get('amount')?.invalid">
+          Valid amount is required
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          placeholder="Enter description"
+          class="form-control"
+          rows="3"
+        ></textarea>
+        <div class="error-message" *ngIf="expenseForm.get('description')?.touched && expenseForm.get('description')?.invalid">
+          Description is required
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input
+          id="date"
+          type="date"
+          formControlName="date"
+          class="form-control"
+        />
+        <div class="error-message" *ngIf="expenseForm.get('date')?.touched && expenseForm.get('date')?.invalid">
+          Date is required
+        </div>
+      </div>
+  
+      <button type="submit" class="btn-submit" [disabled]="expenseForm.invalid">
+        Generate Invoice
+      </button>
+    </form>
+  </div>
