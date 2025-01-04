@@ -3,9 +3,18 @@ export interface PayrollData {
     employeeName: string;
     employeeId: string;
     basicSalary: number;
-    allowanceType: string;
+    
     allowanceAmount: number;
     deductions: number;
     totalAmount: number;
     invoiceNumber: string;
   }
+
+
+  export interface Expense {
+    id: number;
+    expenseType: string;
+    expenseDescription: string;
+    expenseAmount: number;
+    invoiceNumber: string;
+}

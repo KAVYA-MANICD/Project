@@ -19,7 +19,7 @@ export class PayrollformComponent implements OnInit {
   }
 
   payrollForm!: FormGroup;
-  // allowanceTypes = ['Salary', 'Rent', 'Maintenance'];
+  
   loading = false;
   errorMessage = '';
   successMessage = '';
@@ -39,7 +39,7 @@ export class PayrollformComponent implements OnInit {
       employeeName: ['', Validators.required],
       employeeId: ['', Validators.required],
       basicSalary: ['', [Validators.required, Validators.min(0)]],
-      // allowanceType: ['', Validators.required],
+
       allowanceAmount: ['', [Validators.required, Validators.min(0)]],
       deductions: ['', [Validators.required, Validators.min(0)]]
     });
@@ -53,29 +53,7 @@ export class PayrollformComponent implements OnInit {
     return 0;
   }
 
-  // onSubmit() {
-  //   if (this.payrollForm.valid) {
-  //     this.loading = true;
-  //     const payrollData: PayrollData = {
-  //       ...this.payrollForm.value,
-  //       totalAmount: this.calculateTotal()
-  //     };
-
-  //     this.payrollService.createPayroll(payrollData).subscribe({
-  //       next: () => {
-  //         this.successMessage = 'Payroll created successfully!';
-  //         this.router.navigate(['/payrolllist']);
-  //         this.loading = false;
-  //         this.initializeForm();
-  //       },
-  //       error: (err) => {
-  //         this.errorMessage = 'Failed to create payroll';
-  //         this.loading = false;
-  //         console.error('Error:', err);
-  //       }
-  //     });
-  //   }
-  // }
+  
 
   onSubmit() {
     if (this.payrollForm.valid) {

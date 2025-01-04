@@ -1,0 +1,112 @@
+<div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidemenu">
+      <ul>
+        <li><a routerLink="/home"><i class="fa fa-home"></i> Home</a></li>
+        <li><a routerLink="/compinvoice"><i class="fa fa-file-invoice"></i> Client Invoice</a></li>
+        <li><a routerLink="/salinvoice"><i class="fa fa-file-invoice-dollar"></i> Salary Invoice</a></li>
+        <li><a routerLink="/payrollform"><i class="fa fa-file-invoice-dollar"></i> Payroll Invoice</a></li>
+        <li><a routerLink="/utility"><i class="fa fa-file-invoice-dollar"></i> Utility Expenses</a></li>
+      </ul>
+    </div>
+  
+    <div class="content">
+      <div class="button-container">
+        <button class="create-btn" (click)="openModal()">Create Expense</button>
+  
+        <div class="modal" [class.show]="isModalOpen">
+          <div class="modal-content">
+            <span class="close" (click)="closeModal()">&times;</span>
+            <h2 class="form-title">Expense Details</h2>
+  
+            <div *ngIf="successMessage" class="message success">
+              <i class="fas fa-check-circle"></i> {{ successMessage }}
+            </div>
+  
+            <div *ngIf="errorMessage" class="message error">
+              <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
+            </div>
+  
+            <div *ngIf="loading" class="message loading">
+              <i class="fas fa-spinner fa-spin"></i> Processing...
+            </div>
+  
+            <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()">
+              <div class="form-group">
+                <label for="expenseType">Expense Type</label>
+                <select id="expenseType" formControlName="expenseType" class="form-input">
+                  <option value="">Select Type</option>
+                  <option *ngFor="let type of expenseTypes" [value]="type">{{ type }}</option>
+                </select>
+                <div *ngIf="isFieldInvalid('expenseType')" class="error-message">
+                  Expense type is required
+                </div>
+              </div>
+  
+              <div class="form-group">
+                <label for="expenseDescription">Expense Description</label>
+                <textarea id="expenseDescription" formControlName="expenseDescription" class="form-input"></textarea>
+                <div *ngIf="isFieldInvalid('expenseDescription')" class="error-message">
+                  Expense description is required
+                </div>
+              </div>
+  
+              <div class="form-group">
+                <label for="expenseAmount">Expense Amount</label>
+                <input type="number" id="expenseAmount" formControlName="expenseAmount" class="form-input">
+                <div *ngIf="isFieldInvalid('expenseAmount')" class="error-message">
+                  Valid expense amount is required
+                </div>
+              </div>
+  
+              <button type="submit" [disabled]="!expenseForm.valid || loading" class="submit-btn">
+                {{ loading ? 'Processing...' : 'Submit Expense' }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+   
+     
+
+ <div class="expenses-table">
+  <h3>Company Expenses</h3>
+  <table *ngIf="expenses.length > 0" class="table">
+    <thead>
+      <tr>
+        <th>Expense Type</th>
+        <th>Expense Description</th>
+        <th>Expense Amount</th>
+        <th>Invoice Number</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let expense of expenses">
+        <td>{{ expense.expenseType }}</td>
+        <td>{{ expense.expenseDescription }}</td>
+        <td>{{ expense.expenseAmount | currency }}</td>
+        <td>{{ expense.invoiceNumber }}</td>
+        <td class="action-buttons">
+          <button class="btn-delete" (click)="deleteExpense(expense.id)">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+          <button class="btn-invoice" (click)="generateInvoice(expense)">
+            <i class="fas fa-file-invoice"></i> Generate Invoice
+          </button>
+          <button class="btn-download" (click)="downloadCSV(expense)">
+            <i class="fas fa-download"></i> Download CSV
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="expenses.length === 0">No expenses to show.</p>
+</div>
+
+
+    </div>
+  </div>
+  
+  
+  

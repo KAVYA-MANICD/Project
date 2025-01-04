@@ -79,14 +79,6 @@ public class Payroll {
         this.basicSalary = basicSalary;
     }
 
-//    public String getAllowanceType() {
-//        return allowanceType;
-//    }
-//
-//    public void setAllowanceType(String allowanceType) {
-//        this.allowanceType = allowanceType;
-//    }
-
     public BigDecimal getAllowanceAmount() {
         return allowanceAmount;
     }

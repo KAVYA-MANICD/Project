@@ -9,6 +9,7 @@ import { JupiterComponent } from './jupiter/jupiter.component';
 import { PayrollInvoiceComponentComponent } from './payroll-invoice-component/payroll-invoice-component.component';
 import { PayrollListComponent } from './payroll-list/payroll-list.component';
 import { PayrollformComponent } from './payrollform/payrollform.component';
+import { UtilityExpensesComponent } from './utility-expenses/utility-expenses.component';
 
 export const routes: Routes = [
     {path:'',redirectTo:'login',pathMatch:'full'},
@@ -22,4 +23,5 @@ export const routes: Routes = [
     {path:'payroll',component:PayrollInvoiceComponentComponent},
     {path:'payrolllist',component:PayrollListComponent},
     {path:'payrollform',component:PayrollformComponent},
+    {path:'utility',component:UtilityExpensesComponent},
 ];

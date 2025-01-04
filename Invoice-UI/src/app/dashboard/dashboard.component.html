@@ -1,1 +1,101 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+    <!-- Sidebar Menu -->
+    <div class="sidebar">
+      <ul>
+        <li><a routerLink="/home"><i class="fa fa-home"></i> Home</a></li>
+        <li><a routerLink="/compinvoice"><i class="fa fa-file-invoice"></i> Client Invoice</a></li>
+        <li><a routerLink="/salinvoice"><i class="fa fa-file-invoice-dollar"></i> Salary Invoice</a></li>
+        <li><a routerLink="/payrollform"><i class="fa fa-file-invoice-dollar"></i> Payroll Invoice</a></li>
+        <li><a routerLink="/utility"><i class="fa fa-file-invoice-dollar"></i> Utility Expenses</a></li>
+      </ul>
+    </div>
+  
+    <!-- Main Content -->
+    <div class="content">
+      <div class="header">
+        <div class="button-wrapper">
+            <button (click)="openPopup()" class="open-popup-btn">
+              <i class="fas fa-plus"></i> Create Employee Payroll
+            </button>
+          </div>
+          
+      </div>
+  
+      <!-- Modal for Payroll Form -->
+      <div *ngIf="isPopupOpen" class="modal-overlay">
+        <div class="modal">
+          <h2 class="modal-title">Employee Payroll Invoice</h2>
+          <button (click)="closePopup()" class="close-btn">&times;</button>
+          <form [formGroup]="payrollForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="employeeName">Employee Name</label>
+                <input type="text" id="employeeName" formControlName="employeeName" class="form-input" />
+                <div *ngIf="isFieldInvalid('employeeName')" class="error-text">Employee name is required</div>
+              </div>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group">
+                <label for="employeeId">Employee ID</label>
+                <input type="text" id="employeeId" formControlName="employeeId" class="form-input" />
+                <div *ngIf="isFieldInvalid('employeeId')" class="error-text">Employee ID is required</div>
+              </div>
+              <div class="form-group">
+                <label for="basicSalary">Basic Salary</label>
+                <input type="number" id="basicSalary" formControlName="basicSalary" class="form-input" />
+                <div *ngIf="isFieldInvalid('basicSalary')" class="error-text">Valid basic salary is required</div>
+              </div>
+            </div>
+  
+            <div class="form-group">
+              <label for="allowanceAmount">Allowance Amount</label>
+              <input type="number" id="allowanceAmount" formControlName="allowanceAmount" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label for="deductions">Deductions</label>
+              <input type="number" id="deductions" formControlName="deductions" class="form-input" />
+            </div>
+  
+            <div class="total-amount">
+              Total Amount: <span class="amount">${{ calculateTotal() }}</span>
+            </div>
+  
+            <button type="submit" [disabled]="!payrollForm.valid || loading" class="submit-btn">
+              {{ loading ? 'Processing...' : 'Submit Payroll' }}
+            </button>
+          </form>
+        </div>
+      </div>
+  
+      <!-- Payroll Table -->
+      <div class="payroll-table">
+        <h3 style="text-align: center;">Employee Payrolls</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Employee Name</th>
+              <th>Employee ID</th>
+              <th>Invoice Number</th>
+              <th>Total Salary</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let payroll of payrolls">
+              <td>{{ payroll.employeeName }}</td>
+              <td>{{ payroll.employeeId }}</td>
+              <td>{{ payroll.invoiceNumber }}</td>
+              <td>{{ payroll.totalAmount | currency }}</td>
+              <td>
+                <button (click)="deletePayroll(payroll.id)" class="action-btn delete">Delete</button>
+                <button (click)="downloadPDF(payroll.id)" class="action-btn generate">Generate Invoice</button>
+                <button (click)="downloadCSV(payroll.id)" class="action-btn download">Download CSV</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
