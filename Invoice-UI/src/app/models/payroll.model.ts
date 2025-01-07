@@ -17,4 +17,5 @@ export interface PayrollData {
     expenseDescription: string;
     expenseAmount: number;
     invoiceNumber: string;
+    expenseDate: string;
 }

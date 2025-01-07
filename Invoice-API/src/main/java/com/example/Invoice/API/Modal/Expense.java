@@ -64,10 +64,19 @@ public class Expense {
     @Column(name = "invoice_number", nullable = false)
     private String invoiceNumber;
 
+
+    @NotNull(message = "Expense date is required")
+    @Temporal(TemporalType.DATE) // Specifies that only the date will be stored (no time).
+    @Column(name = "expense_date")
+    private Date expenseDate;
+
     @PrePersist
     public void prePersist() {
         if (this.invoiceNumber == null || this.invoiceNumber.isEmpty()) {
             this.invoiceNumber = generateInvoiceNumber();
+        }
+        if (this.expenseDate == null) {
+            this.expenseDate = new Date(); // Set the current date if not provided.
         }
     }
 
@@ -77,6 +86,27 @@ public class Expense {
         String randomPart = String.format("%04d", (int) (Math.random() * 10000));
         return "INV-" + datePart + "-" + randomPart;
     }
+
+    public @NotNull(message = "Expense date is required") Date getExpenseDate() {
+        return expenseDate;
+    }
+
+    public void setExpenseDate(@NotNull(message = "Expense date is required") Date expenseDate) {
+        this.expenseDate = expenseDate;
+    }
+//    @PrePersist
+//    public void prePersist() {
+//        if (this.invoiceNumber == null || this.invoiceNumber.isEmpty()) {
+//            this.invoiceNumber = generateInvoiceNumber();
+//        }
+//    }
+//
+//    private String generateInvoiceNumber() {
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+//        String datePart = dateFormat.format(new Date());
+//        String randomPart = String.format("%04d", (int) (Math.random() * 10000));
+//        return "INV-" + datePart + "-" + randomPart;
+//    }
 
     public Long getId() {
         return id;

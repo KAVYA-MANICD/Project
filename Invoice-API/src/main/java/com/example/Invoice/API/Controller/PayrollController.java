@@ -70,9 +70,9 @@ public class PayrollController {
 
             // Add company details
             Paragraph companyDetails = new Paragraph(
-                    "Address: 123 Tech Avenue, Silicon Valley, CA 94043\n" +
-                            "Phone: (123) 456-7890\n" +
-                            "Email: support@jupiterkingtech.com\n",
+                    "Address: Nrupathunga Road, Kuvempunagar, Mysore\n" +
+                            "Phone: 91+ 7259489277\n" +
+                            "Email: jupiterkingtechnologies@gmail.com\n",
                     FontFactory.getFont(FontFactory.HELVETICA, 12)
             );
             companyDetails.setAlignment(Element.ALIGN_CENTER);

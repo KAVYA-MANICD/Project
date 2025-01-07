@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -23,8 +24,7 @@ public class Payroll {
     @Column(nullable = false)
     private BigDecimal basicSalary;
 
-//    @Column(nullable = false)
-//    private String allowanceType;
+
 
     @Column(nullable = false)
     private BigDecimal allowanceAmount;
@@ -38,13 +38,30 @@ public class Payroll {
     @Column(nullable = false, unique = true)
     private String invoiceNumber; // Added invoice number field
 
-    @ManyToOne
-    @JoinColumn(name = "invoice_id")
-    private Invoice invoice;
+//    @ManyToOne
+//    @JoinColumn(name = "invoice_id")
+//    private Invoice invoice;
+
+
+    @Column(nullable = false)
+    private LocalDate date = LocalDate.now();
 
     @PrePersist
-    public void generateInvoiceNumber() {
+    public void generateInvoiceNumberAndSetDate() {
         this.invoiceNumber = "INV-" + System.currentTimeMillis() + "-" + (int) (Math.random() * 10000);
+        this.date = LocalDate.now(); // Automatically sets the current date when persisting
+    }
+//    @PrePersist
+//    public void generateInvoiceNumber() {
+//        this.invoiceNumber = "INV-" + System.currentTimeMillis() + "-" + (int) (Math.random() * 10000);
+//    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public Long getId() {
@@ -111,11 +128,11 @@ public class Payroll {
         this.invoiceNumber = invoiceNumber;
     }
 
-    public Invoice getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice;
-    }
+//    public Invoice getInvoice() {
+//        return invoice;
+//    }
+//
+//    public void setInvoice(Invoice invoice) {
+//        this.invoice = invoice;
+//    }
 }

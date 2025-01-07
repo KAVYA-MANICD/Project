@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Expense, PayrollData } from './models/payroll.model';
 import { Observable } from 'rxjs';
@@ -96,13 +96,26 @@ deleteExpense(id: number): Observable<any> {
   return this.http.delete(`${this.expenseApiUrl}/${id}`);
 }
 
-downloadCSV(csvContent: string, invoiceNumber: string): Observable<any> {
-  return this.http.post(`${this.expenseApiUrl}/download-csv`, {
-    content: csvContent,
-    invoiceNumber: invoiceNumber
-  });
+// downloadCSV(csvContent: string, invoiceNumber: string): Observable<any> {
+//   return this.http.post(`${this.expenseApiUrl}/download-csv`, {
+//     content: csvContent,
+//     invoiceNumber: invoiceNumber
+//   });
+// }
+downloadCSV(csvContent: string, invoiceNumber: string): Observable<HttpResponse<Blob>> {
+  return this.http.post(`${this.expenseApiUrl}/download-csv`, 
+    { content: csvContent, invoiceNumber: invoiceNumber },
+    {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Accept': 'text/csv'
+      })
+    }
+  );
 }
-  
+
+
 }
 
 

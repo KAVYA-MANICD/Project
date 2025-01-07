@@ -15,6 +15,15 @@ import jsPDF from 'jspdf';
 export class UtilityExpensesComponent implements OnInit{
 
 
+  
+  ngOnInit() {
+    this.initializeForm();
+    this.loadExpenses();  
+  }
+
+
+
+
   expenseForm!: FormGroup;
   expenseTypes = ['Salary', 'Rent', 'Maintenance'];
   loading = false;
@@ -31,11 +40,7 @@ export class UtilityExpensesComponent implements OnInit{
     private router: Router
   ) {}
 
-  ngOnInit() {
-    this.initializeForm();
-    this.loadExpenses();  
-  }
-
+  
  
   
 
@@ -127,92 +132,46 @@ export class UtilityExpensesComponent implements OnInit{
   
   companyDetails = {
     name: 'Jupiter King Technologies',
-    address: 'Nrupathunga Road',
+    address: ' Nrupathunga Road, Kuvempunagar',
     city: 'Mysore',
     state: 'Karnataka',
-    zip: '570015',
+    pincode: '570023',
     phone: '91+ 7259489277',
     email: 'jupiterkingtechnologies@gmail.com'
   };
 
  
 
-  // generateInvoice(expense: Expense) {
-  //   // Create the invoice content
-  //   const invoiceContent = this.createInvoiceContent(expense);
-    
-  //   // Create a Blob with the invoice content
-  //   const blob = new Blob([invoiceContent], { type: 'text/html' });
-  //   const url = window.URL.createObjectURL(blob);
-    
-  //   // Open the invoice in a new window for printing
-  //   const printWindow = window.open(url, '_blank');
-  //   printWindow?.document.write(invoiceContent);
-  //   printWindow?.document.close();
-  //   printWindow?.print();
-  // }
+  
 
 
 
   generateInvoice(expense: Expense) {
-    // Create the invoice content
+    
     const invoiceContent = this.createInvoiceContent(expense);
     
-    // Create a Blob with the invoice content
+    
     const blob = new Blob([invoiceContent], { type: 'text/html' });
     const url = window.URL.createObjectURL(blob);
   
-    // Create a link element
+    
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Invoice_${expense.invoiceNumber}.html`; // Set the file name
-    a.click(); // Trigger the download
+    a.download = `Invoice_${expense.invoiceNumber}.html`; 
+    a.click(); 
   
-    // Clean up the object URL
+    
     window.URL.revokeObjectURL(url);
+
+    const printWindow = window.open(url, '_blank');
+    printWindow?.document.write(invoiceContent);
+    printWindow?.document.close();
+    printWindow?.print();
   }
   
  
 
-  // generateInvoice(expense: Expense) {
-  //   // Create the invoice content as HTML
-  //   const invoiceContent = this.createInvoiceContent(expense);
   
-  //   // Initialize jsPDF with single page and standard font size
-  //   const doc = new jsPDF({
-  //     orientation: 'p', // Portrait orientation
-  //     unit: 'mm', // Unit in millimeters
-  //     format: 'a4' // A4 size paper
-  //   });
-  
-  //   // Set a font size for the content to fit it properly
-  //   doc.setFontSize(12);  // You can adjust this value to fit your content
-  
-  //   // Add the content to the PDF
-  //   doc.html(invoiceContent, {
-  //     callback: (pdf) => {
-  //       // Save the PDF as Invoice_<invoiceNumber>.pdf
-  //       pdf.save(`Invoice_${expense.invoiceNumber}.pdf`);
-  
-  //       // Open the PDF in a new tab for printing
-  //       const pdfBlob = pdf.output('blob');
-  //       const pdfURL = URL.createObjectURL(pdfBlob);
-  //       const printWindow = window.open(pdfURL, '_blank');
-  //       if (printWindow) {
-  //         printWindow.print();
-  //       }
-  
-  //       // Clean up the object URL
-  //       URL.revokeObjectURL(pdfURL);
-  //     },
-  //     x: 10, // Adjust the x-offset for PDF content
-  //     y: 10, // Adjust the y-offset for PDF content
-  //     width: 180, // Adjust the content width to avoid overflow
-  //     windowWidth: 800, // Adjust the window width for rendering
-  //   });
-  // }
-  
-
 
  
 
@@ -248,7 +207,8 @@ export class UtilityExpensesComponent implements OnInit{
           <div class="company-details">
             <h2>${this.companyDetails.name}</h2>
             <p>${this.companyDetails.address}</p>
-            <p>${this.companyDetails.city}, ${this.companyDetails.state} ${this.companyDetails.zip}</p>
+            <p>${this.companyDetails.city}, ${this.companyDetails.state} </p>
+            <p>Pincode: ${this.companyDetails.pincode}</p>
             <p>Phone: ${this.companyDetails.phone}</p>
             <p>Email: ${this.companyDetails.email}</p>
           </div>
@@ -286,59 +246,48 @@ export class UtilityExpensesComponent implements OnInit{
     }
 
 
-  downloadCSV(expense: Expense) {
-    const csvContent = this.createCSVContent(expense);
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `expense_${expense.expenseType}_${new Date().getTime()}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
 
 
-
-// downloadCSV(expense: Expense) {
-//   const csvContent = this.createCSVContent(expense);
+downloadCSV(expense: Expense) {
+  const csvContent = this.createCSVContent(expense);
   
-//   this.payrollService.downloadCSV(csvContent, expense.invoiceNumber).subscribe({
-//     next: (response) => {
-//       this.successMessage = 'CSV file has been saved successfully';
-//       console.log('File saved at:', response.path);
-//     },
-//     error: (error) => {
-//       console.error('Error downloading CSV:', error);
-//       this.errorMessage = 'Failed to save CSV file';
-//     }
-//   });
-// }
-
-// private createCSVContent(expense: Expense): string {
-//   const headers = ['Expense Type', 'Description', 'Amount', 'Invoice Number', 'Date'];
-//   const data = [
-//     this.escapeCSV(expense.expenseType),
-//     this.escapeCSV(expense.expenseDescription),
-//     expense.expenseAmount.toString(),
-//     expense.invoiceNumber,
-//     new Date().toLocaleDateString()
-//   ];
-
-//   return `${headers.join(',')}\n${data.join(',')}`;
-// }
-
-// private escapeCSV(str: string): string {
-//   if (!str) return '';
-//   if (str.includes(',') || str.includes('"') || str.includes('\n')) {
-//     return `"${str.replace(/"/g, '""')}"`;
-//   }
-//   return str;
-// }
-// }
-
-
-
+  this.payrollService.downloadCSV(csvContent, expense.invoiceNumber)
+    .subscribe({
+      next: (response: any) => {
+        // Create blob from the response
+        const blob = new Blob([response.body], { type: 'text/csv' });
+        
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        
+        // Get filename from Content-Disposition header if available
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = `expense_${expense.invoiceNumber}.csv`;
+        if (contentDisposition) {
+          const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
+          if (matches != null && matches[1]) {
+            filename = matches[1].replace(/['"]/g, '');
+          }
+        }
+        
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        this.successMessage = 'CSV file has been saved and downloaded successfully';
+      },
+      error: (error) => {
+        console.error('Error with CSV file:', error);
+        this.errorMessage = 'Failed to process CSV file';
+      }
+    });
+}
 
 
 private createCSVContent(expense: Expense): string {
@@ -362,6 +311,13 @@ private escapeCSV(str: string): string {
   return str;
 }
 }
+
+
+
+
+
+
+
 
 
 
