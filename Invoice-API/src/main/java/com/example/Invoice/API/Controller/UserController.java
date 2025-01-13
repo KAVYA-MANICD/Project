@@ -29,22 +29,7 @@ public class UserController {
         return new String(decodedBytes);
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody User user) {
-//        User admin = userRepository.findByEmail(user.getEmail());  // Use findByEmail here
-//
-//        if (admin != null) {
-//            // Decode the stored password and compare it
-//            String decodedStoredPassword = decodePassword(admin.getPassword());
-//
-//            // Compare the Base64-decoded password
-//            if (decodedStoredPassword.equals(user.getPassword())) {
-//                return ResponseEntity.ok().body("Login successful");
-//            }
-//        }
-//
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-//    }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {

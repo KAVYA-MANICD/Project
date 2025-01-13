@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { PayrollService } from '../payroll.service';
 import { Expense, PayrollData } from '../models/payroll.model';
 import jsPDF from 'jspdf';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-utility-expenses',
@@ -245,6 +246,9 @@ export class UtilityExpensesComponent implements OnInit{
       `;
     }
 
+    
+
+  
 
 
 
@@ -290,6 +294,29 @@ downloadCSV(expense: Expense) {
 }
 
 
+
+
+private handleDownloadResponse(response: HttpResponse<Blob>, expense: Expense) {
+  // Check if the response is successful
+  if (response.status === 200) {
+    const blob = new Blob([response.body!], { type: 'text/csv' });
+    const link = document.createElement('a');
+    const url = window.URL.createObjectURL(blob);
+    link.href = url;
+    link.download = `expense_${expense.invoiceNumber}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    // Show success message
+    this.successMessage = `CSV file has been saved and downloaded successfully.`;
+  } else {
+    // Handle error response
+    this.errorMessage = `Failed to download CSV: ${response.statusText}`;
+  }
+}
+
 private createCSVContent(expense: Expense): string {
   const headers = ['Expense Type', 'Description', 'Amount', 'Invoice Number', 'Date'];
   const data = [
@@ -306,20 +333,8 @@ private createCSVContent(expense: Expense): string {
 private escapeCSV(str: string): string {
   if (!str) return '';
   if (str.includes(',') || str.includes('"') || str.includes('\n')) {
-    return `"${str.replace(/"/g, '""')}"`;
+    return `"${str.replace(/"/g, '""')}"`;  // Escape CSV special characters
   }
   return str;
 }
 }
-
-
-
-
-
-
-
-
-
-
-
-

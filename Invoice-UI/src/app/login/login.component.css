@@ -1,4 +1,4 @@
-
+/* 
 
    body {
     background-image: url('/invoice10png.png');
@@ -94,79 +94,6 @@
   }
   
 
-
-   /* body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
-
-  .login-container {
-    background: #fff;
-    padding: 20px 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-  }
-
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-  }
-
-  .form-group {
-    margin-bottom: 15px;
-  }
-
-  label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
-  }
-
-  .form-control {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-
-  .btn-submit {
-    width: 100%;
-    padding: 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-
-  .btn-submit:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-
-  .error {
-    color: #e3342f;
-    font-size: 12px;
-    margin-top: 5px;
-  } */
-
-  /* .alert {
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    font-size: 14px;
-  } */
-
   .alert-success {
     background-color: #d4edda;
     color: #155724;
@@ -184,4 +111,160 @@
     font-size: 14px;
     text-align: center;
     margin-top: 10px;
-  }
+  } */
+
+
+
+
+  body {
+    background-image: url('/invoice10png.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover; /* Ensures the background adjusts to screen size */
+    height: 100vh; 
+    margin: 0; 
+    display: flex;
+    justify-content: center; /* Centers the login container horizontally */
+    align-items: center; /* Centers the login container vertically */
+}
+
+/* .login-container {
+  
+    max-width: 90%; 
+    width: 400px; 
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    box-sizing: border-box;
+} */
+
+.login-container {
+  margin-top: 110px;
+  margin-left: 610px;
+  max-width: 500px;
+  width: 100%; 
+  padding: 20px;
+  height: 310px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #0d0b0b;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+}
+
+input:focus {
+    border-color: #007bff;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+.btn-submit:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.error small {
+    color: red;
+}
+
+/* Responsive Design with Media Queries */
+@media (max-width: 768px) {
+    .login-container {
+        width: 90%; /* Adjusts container width for tablets */
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    label {
+        font-size: 14px;
+    }
+
+    input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .btn-submit {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        width: 100%; /* Full width for smaller devices */
+        margin: 0 10px; /* Adds some padding to the sides */
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    label {
+        font-size: 12px;
+    }
+
+    input {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .btn-submit {
+        font-size: 12px;
+        padding: 6px;
+    }
+}

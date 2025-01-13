@@ -17,33 +17,6 @@ import java.util.Date;
 @Table(name = "companyexpenses")
 public class Expense {
 
-//    @Setter
-//    @Getter
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//
-//    @NotEmpty(message = "Expense type is required")
-//    @Column(name = "expense_type")  // Explicit column name mapping
-//    private String expenseType;
-//
-//    @NotEmpty(message = "Expense description is required")
-//    @Column(name = "expense_description")  // Explicit column name mapping
-//    private String expenseDescription;
-//
-//    @NotNull(message = "Expense amount is required")
-//    @Column(name = "expense_amount")  // Explicit column name mapping
-//    private Double expenseAmount;
-//
-//    @Setter
-//    @Getter
-//    @Column(nullable = false, unique = true)
-//    private String invoiceNumber; // Added invoice number field
-//
-//    @PrePersist
-//    public void generateInvoiceNumber() {
-//        this.invoiceNumber = "INV-" + System.currentTimeMillis() + "-" + (int) (Math.random() * 10000);
-//    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -94,19 +67,7 @@ public class Expense {
     public void setExpenseDate(@NotNull(message = "Expense date is required") Date expenseDate) {
         this.expenseDate = expenseDate;
     }
-//    @PrePersist
-//    public void prePersist() {
-//        if (this.invoiceNumber == null || this.invoiceNumber.isEmpty()) {
-//            this.invoiceNumber = generateInvoiceNumber();
-//        }
-//    }
-//
-//    private String generateInvoiceNumber() {
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-//        String datePart = dateFormat.format(new Date());
-//        String randomPart = String.format("%04d", (int) (Math.random() * 10000));
-//        return "INV-" + datePart + "-" + randomPart;
-//    }
+
 
     public Long getId() {
         return id;

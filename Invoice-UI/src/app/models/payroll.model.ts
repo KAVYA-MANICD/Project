@@ -1,13 +1,28 @@
 export interface PayrollData {
+    // id?: number;
+    // employeeName: string;
+    // employeeId: string;
+    // basicSalary: number;
+    // allowanceAmount: number;
+    // deductions: number;
+    // totalAmount: number;
+    // invoiceNumber: string;
+
+
     id?: number;
     employeeName: string;
     employeeId: string;
     basicSalary: number;
-    
     allowanceAmount: number;
     deductions: number;
     totalAmount: number;
-    invoiceNumber: string;
+    // New fields
+    bankName: string;
+    accountNumber: string;
+    ifscCode: string;
+    transactionId: string;
+    transactionDate: Date;
+    // paymentStatus: 'Pending' | 'Completed' | 'Failed';
   }
 
 
