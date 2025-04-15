@@ -11,7 +11,6 @@ import lombok.Setter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 @Data
 @Entity
 @Table(name = "companyexpenses")

@@ -6,10 +6,11 @@ import { PayrollService } from '../payroll.service';
 import { Expense, PayrollData } from '../models/payroll.model';
 import jsPDF from 'jspdf';
 import { HttpResponse } from '@angular/common/http';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-utility-expenses',
-  imports: [ReactiveFormsModule, CommonModule,RouterModule],
+  imports: [ReactiveFormsModule, CommonModule,RouterModule,NavbarComponent],
   templateUrl: './utility-expenses.component.html',
   styleUrl: './utility-expenses.component.css'
 })

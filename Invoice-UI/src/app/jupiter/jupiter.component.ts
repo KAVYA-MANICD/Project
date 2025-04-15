@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { PayrollService } from '../payroll.service';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 interface PayrollData {
   id?: number;
@@ -24,7 +25,7 @@ interface PayrollData {
 
 @Component({
   selector: 'app-jupiter',
-  imports: [ReactiveFormsModule, CommonModule,RouterModule,FormsModule],
+  imports: [ReactiveFormsModule, CommonModule,RouterModule,FormsModule,NavbarComponent],
   templateUrl: './jupiter.component.html',
   styleUrl: './jupiter.component.css'
 })
