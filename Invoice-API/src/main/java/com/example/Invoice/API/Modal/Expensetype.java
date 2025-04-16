@@ -14,7 +14,7 @@ public class Expensetype {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long expenseId;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String expenseType;
 }
 

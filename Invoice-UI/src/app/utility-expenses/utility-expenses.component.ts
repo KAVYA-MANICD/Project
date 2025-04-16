@@ -6,6 +6,7 @@ import { PayrollService } from '../payroll.service';
 import { Expense, PayrollData } from '../models/payroll.model';
 import jsPDF from 'jspdf';
 import { HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
@@ -21,13 +22,14 @@ export class UtilityExpensesComponent implements OnInit{
   ngOnInit() {
     this.initializeForm();
     this.loadExpenses();  
+    this.loadExpenseTypes();
   }
 
 
 
 
   expenseForm!: FormGroup;
-  expenseTypes = ['Salary', 'Rent', 'Maintenance'];
+  expenseTypes: string[] = [];
   loading = false;
   errorMessage = '';
   successMessage = '';
@@ -39,7 +41,8 @@ export class UtilityExpensesComponent implements OnInit{
   constructor(
     private fb: FormBuilder,
     private payrollService: PayrollService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
 
   
@@ -54,6 +57,19 @@ export class UtilityExpensesComponent implements OnInit{
     });
   }
 
+  loadExpenseTypes() {
+    this.http.get<{ expenseId: number; expenseType: string }[]>('http://localhost:8080/expense-types/all').subscribe({
+      next: (data) => {
+        console.log('Loaded expense types:', data);
+        this.expenseTypes = data.map(item => item.expenseType); // Extract expenseType strings
+      },
+      error: (err) => {
+        console.error('Error loading expense types:', err);
+        this.errorMessage = 'Failed to load expense types';
+      }
+    });
+  }
+  
   openModal() {
     this.isModalOpen = true;
   }

@@ -1,8 +1,8 @@
 .sidebar,
 .sidemenu {
-  width: 250px;
+  width: 262px;
   background-color: #2c3e50;
-  padding: 2rem 1rem;
+  padding: 3rem 1rem;
   height: 100vh;
   position: fixed;
   left: 0;
@@ -57,6 +57,11 @@
   text-decoration: none;
   border-radius: 0.5rem;
   transition: all 0.3s ease;
+}
+.sidemenu ul li a {
+  white-space: nowrap; /* 👈 Prevents text from wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Optional: Adds "..." if it overflows */
 }
 
 .sidebar ul li a i,

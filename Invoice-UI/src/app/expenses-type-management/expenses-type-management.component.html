@@ -5,5 +5,74 @@
   crossorigin="anonymous"
   referrerpolicy="no-referrer"
 />
+
 <app-navbar></app-navbar>
-<p>expenses-type-management works!</p>
+
+<div class="content">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-content">
+      <p style="font-size: 30px">Expenses-Type Management</p>
+    </div>
+  </div>
+
+  <!-- Create Button -->
+  <div class="button-container">
+    <button class="create-btn" (click)="openModal()">
+      <i class="fas fa-plus"></i> Create Expense Type
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="expenses-table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Sl No</th>
+          <th>Expense Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let expense of expenseType; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ expense.expenseType }}</td>
+          <td class="action-buttons">
+            <button
+              class="btn-delete"
+              (click)="deleteExpenseType(expense.expenseId)"
+            >
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="expenseType.length === 0">
+          <td colspan="3">No expense types found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="expenseModal">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h2 class="form-title">Create New Expense Type</h2>
+
+    <form (ngSubmit)="saveExpenseType()">
+      <div class="form-group">
+        <label for="expenseType">Expense Type</label>
+        <input
+          id="expenseType"
+          class="form-input"
+          name="expenseType"
+          [(ngModel)]="newExpenseType"
+          required
+          placeholder="Enter expense type"
+        />
+      </div>
+      <button type="submit" class="submit-btn">Save</button>
+    </form>
+  </div>
+</div>
