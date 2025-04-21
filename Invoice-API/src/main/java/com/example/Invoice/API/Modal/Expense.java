@@ -7,6 +7,8 @@ import lombok.Data;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,6 +44,7 @@ public class Expense {
     @Column(name = "expense_date")
     private Date expenseDate;
 
+    private static final Map<String, Integer> dailyInvoiceCounter = new HashMap<>();
     @PrePersist
     public void prePersist() {
         if (this.invoiceNumber == null || this.invoiceNumber.isEmpty()) {
@@ -52,12 +55,16 @@ public class Expense {
         }
     }
 
+    // 🔸 Generates invoice like INV-20250421-0001
     private String generateInvoiceNumber() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        String datePart = dateFormat.format(new Date());
-        String randomPart = String.format("%04d", (int) (Math.random() * 10000));
-        return "INV-" + datePart + "-" + randomPart;
+        String datePart = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        int count = dailyInvoiceCounter.getOrDefault(datePart, 0) + 1;
+        dailyInvoiceCounter.put(datePart, count);
+
+        String sequentialPart = String.format("%04d", count);
+        return "INV-" + datePart + "-" + sequentialPart;
     }
+
 
     public @NotNull(message = "Expense date is required") Date getExpenseDate() {
         return expenseDate;

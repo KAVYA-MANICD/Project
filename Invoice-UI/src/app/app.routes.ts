@@ -7,17 +7,17 @@ import { PayrollInvoiceComponentComponent } from './payroll-invoice-component/pa
 import { ExpensesTypeManagementComponent } from './expenses-type-management/expenses-type-management.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { UtilityExpensesComponent } from './utility-expenses/utility-expenses.component';
-import { authGuard } from './auth.guard';
+// import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
     {path:'',redirectTo:'login',pathMatch:'full'},
     {path:'login',component:LoginComponent},
     
-    {path:'home',component:HomeComponent, canActivate: [authGuard]},
+    {path:'home',component:HomeComponent},//canActivate: [authGuard]},
     
-    {path:'payroll',component:PayrollInvoiceComponentComponent,canActivate: [authGuard]},
+    {path:'payroll',component:PayrollInvoiceComponentComponent},//canActivate: [authGuard]},
     
-    {path:'utility',component:UtilityExpensesComponent,canActivate: [authGuard]},
+    {path:'utility',component:UtilityExpensesComponent},//canActivate: [authGuard]},
 
     {path:'jupiter',component:JupiterComponent},
     
