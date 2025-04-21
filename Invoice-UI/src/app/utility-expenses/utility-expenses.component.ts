@@ -187,87 +187,298 @@ export class UtilityExpensesComponent implements OnInit{
     printWindow?.print();
   }
   
- 
 
-  
-
- 
-
- 
-
- 
-  
-  
-  
   createInvoiceContent(expense: Expense): string {
-      const date = new Date().toLocaleDateString();
-    
-      return `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            .header { text-align: center; margin-bottom: 30px; }
-            .company-details { margin-bottom: 30px; }
-            .invoice-details { margin-bottom: 30px; }
-            .expense-details { margin-bottom: 30px; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { padding: 10px; border: 1px solid #ddd; }
-            .total { margin-top: 20px; text-align: right; }
-          </style>
-        </head>
-        <body>
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-US');
+    const dueDate = new Date(today);
+    dueDate.setDate(today.getDate() + 30);
+    const formattedDueDate = dueDate.toLocaleDateString('en-US');
+
+    const descriptionItems = [
+      { label: 'Service Fee', amount: expense.expenseAmount * 0.6 },
+      { label: 'Labor: 5 hours at $75/hr', amount: 5 * 75 },
+      { label: 'Parts', amount: expense.expenseAmount * 0.15 },
+    ];
+
+    const subtotal = descriptionItems.reduce((sum, item) => sum + item.amount, 0);
+    const taxRate = 0.0625;
+    const taxableAmount = descriptionItems.find(item => item.label === 'Parts')?.amount || 0;
+    const tax = taxableAmount * taxRate;
+    const total = subtotal + tax;
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>INVOICE</title>
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 12px;
+          }
+          .invoice-container {
+            width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+          }
+          .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: top;
+            margin-bottom: 20px;
+          }
+          .company-info {
+            text-align: left;
+          }
+          .invoice-info {
+            text-align: right;
+          }
+          .invoice-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+          }
+          .bill-to {
+            margin-top: 20px;
+          }
+          .bill-to strong {
+            display: block;
+            margin-bottom: 5px;
+          }
+          .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+          }
+          .details-table th, .details-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+          }
+          .details-table th {
+            background-color: #f2f2f2;
+          }
+          .taxed {
+            text-align: center;
+          }
+          .amount {
+            text-align: right;
+          }
+          .summary-table {
+            width: 300px;
+            margin-top: 20px;
+            margin-left: auto;
+            border-collapse: collapse;
+          }
+          .summary-table th, .summary-table td {
+            padding: 8px;
+            text-align: left;
+          }
+          .summary-table th {
+            text-align: right;
+          }
+          .total {
+            font-weight: bold;
+          }
+          .other-comments {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #f9f9f9;
+          }
+          .other-comments ol {
+            padding-left: 20px;
+          }
+          .payment-info {
+            margin-top: 20px;
+            text-align: right;
+          }
+          .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 10px;
+            color: #777;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="invoice-container">
           <div class="header">
-            <h1>INVOICE</h1>
-          </div>
-          
-          <div class="company-details">
-            <h2>${this.companyDetails.name}</h2>
-            <p>${this.companyDetails.address}</p>
-            <p>${this.companyDetails.city}, ${this.companyDetails.state} </p>
-            <p>Pincode: ${this.companyDetails.pincode}</p>
-            <p>Phone: ${this.companyDetails.phone}</p>
-            <p>Email: ${this.companyDetails.email}</p>
-          </div>
-    
-          <div class="invoice-details">
-            <p><strong>Invoice Number:</strong> ${expense.invoiceNumber}</p>
-            <p><strong>Date:</strong> ${date}</p>
-          </div>
-    
-          <div class="expense-details">
-            <table>
-              <thead>
+            <div class="company-info">
+              <strong>${this.companyDetails.name}</strong><br>
+              ${this.companyDetails.address}<br>
+              ${this.companyDetails.city}, ${this.companyDetails.state} - ${this.companyDetails.pincode}<br>
+              Phone: ${this.companyDetails.phone}<br>
+              Website: somedomain.com
+            </div>
+            <div class="invoice-info">
+              <h2 class="invoice-title">INVOICE</h2>
+              <table>
                 <tr>
-                  <th>Expense Type</th>
-                  <th>Description</th>
-                  <th>Amount</th>
+                  <td><strong>DATE</strong></td>
+                  <td>${formattedDate}</td>
                 </tr>
-              </thead>
-              <tbody>
                 <tr>
-                  <td>${expense.expenseType}</td>
-                  <td>${expense.expenseDescription}</td>
-                  <td>$${expense.expenseAmount.toFixed(2)}</td>
+                  <td><strong>INVOICE #</strong></td>
+                  <td>${expense.invoiceNumber}</td>
                 </tr>
-              </tbody>
-            </table>
-    
-            <div class="total">
-              <h3>Total Amount: $${expense.expenseAmount.toFixed(2)}</h3>
+                <tr>
+                  <td><strong>CUSTOMER ID</strong></td>
+                  <td>[123]</td>
+                </tr>
+                <tr>
+                  <td><strong>DUE DATE</strong></td>
+                  <td>${formattedDueDate}</td>
+                </tr>
+              </table>
             </div>
           </div>
-        </body>
-        </html>
-      `;
-    }
 
-    
+          <div class="bill-to">
+            <strong>BILL TO</strong><br>
+            [Name]<br>
+            [Company Name]<br>
+            [Street Address]<br>
+            [City, ST ZIP]<br>
+            [Phone]
+          </div>
 
-  
+          <table class="details-table">
+            <thead>
+              <tr>
+                <th>DESCRIPTION</th>
+                <th class="taxed">TAXED</th>
+                <th class="amount">AMOUNT</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${descriptionItems.map(item => `
+                <tr>
+                  <td>${item.label}</td>
+                  <td class="taxed">${item.label === 'Parts' ? 'X' : ''}</td>
+                  <td class="amount">${item.amount.toFixed(2)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
 
+          <table class="summary-table">
+            <tbody>
+              <tr>
+                <th>Subtotal</th>
+                <td class="amount">${subtotal.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <th>Taxable</th>
+                <td class="amount">${taxableAmount.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <th>Tax Rate</th>
+                <td class="amount">${(taxRate * 100).toFixed(2)}%</td>
+              </tr>
+              <tr>
+                <th>Tax Due</th>
+                <td class="amount">${tax.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <th>Other</th>
+                <td class="amount"></td>
+              </tr>
+              <tr class="total">
+                <th>TOTAL</th>
+                <td class="amount">$ ${total.toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
 
+          <div class="other-comments">
+            <strong>OTHER COMMENTS</strong>
+            <ol>
+              <li>Total payment due in 30 days</li>
+              <li>Please include the invoice number on your check</li>
+            </ol>
+          </div>
+
+          <div class="payment-info">
+            Make all checks payable to<br>
+            [Your Company Name]
+          </div>
+
+          <div class="footer">
+            If you have any questions about this invoice, please contact<br>
+            [Name, Phone #, E-mail]<br>
+            Thank You For Your Business!
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+  // createInvoiceContent(expense: Expense): string {
+  //   const date = new Date().toLocaleDateString();
+
+  //   return `
+  //     <!DOCTYPE html>
+  //     <html>
+  //     <head>
+  //       <style>
+  //         body { font-family: Arial, sans-serif; margin: 40px; }
+  //         .header { text-align: center; margin-bottom: 30px; }
+  //         .company-details { margin-bottom: 30px; }
+  //         .invoice-details { margin-bottom: 30px; }
+  //         .expense-details { margin-bottom: 30px; }
+  //         table { width: 100%; border-collapse: collapse; }
+  //         th, td { padding: 10px; border: 1px solid #ddd; }
+  //         .total { margin-top: 20px; text-align: right; }
+  //       </style>
+  //     </head>
+  //     <body>
+  //       <div class="header">
+  //         <h1>INVOICE</h1>
+  //       </div>
+
+  //       <div class="company-details">
+  //         <h2>${this.companyDetails.name}</h2>
+  //         <p>${this.companyDetails.address}</p>
+  //         <p>${this.companyDetails.city}, ${this.companyDetails.state} </p>
+  //         <p>Pincode: ${this.companyDetails.pincode}</p>
+  //         <p>Phone: ${this.companyDetails.phone}</p>
+  //         <p>Email: ${this.companyDetails.email}</p>
+  //       </div>
+
+  //       <div class="invoice-details">
+  //         <p><strong>Invoice Number:</strong> ${expense.invoiceNumber}</p>
+  //         <p><strong>Date:</strong> ${date}</p>
+  //       </div>
+
+  //       <div class="expense-details">
+  //         <table>
+  //           <thead>
+  //             <tr>
+  //               <th>Expense Type</th>
+  //               <th>Description</th>
+  //               <th>Amount</th>
+  //             </tr>
+  //           </thead>
+  //           <tbody>
+  //             <tr>
+  //               <td>${expense.expenseType}</td>
+  //               <td>${expense.expenseDescription}</td>
+  //               <td>$${expense.expenseAmount.toFixed(2)}</td>
+  //             </tr>
+  //           </tbody>
+  //         </table>
+
+  //         <div class="total">
+  //           <h3>Total Amount: $${expense.expenseAmount.toFixed(2)}</h3>
+  //         </div>
+  //       </div>
+  //     </body>
+  //     </html>
+  //   `;
+  // }
 
 downloadCSV(expense: Expense) {
   const csvContent = this.createCSVContent(expense);

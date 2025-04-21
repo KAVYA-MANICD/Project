@@ -1,36 +1,38 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';  
+import { RouterModule } from '@angular/router';  
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterModule],  
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
 
-  ngOnInit(): void {
-    const params = new URLSearchParams(window.location.search);
-    const fromUnifiedDashboard = params.get('fromUnifiedDashboard');
+  constructor(private route: ActivatedRoute, private router: Router) { }  
 
-    if (fromUnifiedDashboard === 'yes') {
-      localStorage.setItem('fromUnifiedDashboard', 'true');
-      window.location.href = 'http://localhost:3000/';
-      return;
-    }
+  ngOnInit(): void {
+    // Subscribe to query parameters
+    this.route.queryParams.subscribe(params => {
+      const fromUnifiedDashboard = params['fromUnifiedDashboard'];
+      if (fromUnifiedDashboard === 'yes') {
+        localStorage.setItem('fromUnifiedDashboard', 'true');  
+      }
+    });
   }
 
   onLogout(): void {
+    // Check the flag in localStorage
     const fromUnified = localStorage.getItem('fromUnifiedDashboard');
 
     if (fromUnified === 'true') {
-      // Optional: clear the flag if you don't want it to persist forever
-      localStorage.removeItem('fromUnifiedDashboard');
-      window.location.href = 'http://localhost:3000/';
+      localStorage.removeItem('fromUnifiedDashboard');  
+      window.location.href = 'http://localhost:3000/';  // Redirect to external URL (e.g., logout page)
     } else {
-      // fallback - allow Angular to route to the login page
-      window.location.href = '/login';
+      this.router.navigate(['/login']);  // Navigate to the login page using Angular Router
     }
   }
 }

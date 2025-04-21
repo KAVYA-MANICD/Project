@@ -62,6 +62,7 @@
   white-space: nowrap; /* 👈 Prevents text from wrapping */
   overflow: hidden;
   text-overflow: ellipsis; /* Optional: Adds "..." if it overflows */
+  cursor: pointer;
 }
 
 .sidebar ul li a i,
