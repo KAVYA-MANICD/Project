@@ -47,13 +47,14 @@ export class UtilityExpensesComponent implements OnInit{
 
   
  
-  
 
   initializeForm() {
     this.expenseForm = this.fb.group({
       expenseType: ['', Validators.required],
       expenseDescription: ['', Validators.required],
       expenseAmount: ['', [Validators.required, Validators.min(0)]],
+      billingName: ['', Validators.required],        // 🆕 Added new field
+      billingAddress: ['', Validators.required]      // 🆕 Added new field
     });
   }
 
@@ -76,33 +77,31 @@ export class UtilityExpensesComponent implements OnInit{
 
   closeModal() {
     this.isModalOpen = false;
-    this.expenseForm.reset(); // Reset form on modal close
+    this.expenseForm.reset();       // 🔁 Reset form on close
+    this.successMessage = '';       // 🆕 Clear success
+    this.errorMessage = '';         // 🆕 Clear error
   }
 
 
   onSubmit() {
     if (this.expenseForm.valid) {
-        this.loading = true;
-        const expenseData = this.expenseForm.value;
+      this.loading = true;
+      const expenseData = this.expenseForm.value;   // 🚩 Contains billingName + billingAddress now
 
-        this.payrollService.createExpense(expenseData).subscribe({
-            next: (response) => {
-                console.log('Created expense:', response); // Debug log
-                this.successMessage = 'Expense created successfully!';
-                this.loading = false;
-                this.loadExpenses();
-                this.closeModal();
-            },
-            error: (err) => {
-                console.error('Error creating expense:', err); // Debug log
-                this.errorMessage = 'Failed to create expense';
-                this.loading = false;
-            }
-        });
+      this.payrollService.createExpense(expenseData).subscribe({
+        next: (response) => {
+          this.successMessage = 'Expense created successfully!';
+          this.loading = false;
+          this.loadExpenses();
+          this.closeModal();
+        },
+        error: (err) => {
+          this.errorMessage = 'Failed to create expense';
+          this.loading = false;
+        }
+      });
     }
-}
-
-  
+  }
 
   loadExpenses() {
     this.payrollService.getExpenses().subscribe({
@@ -149,8 +148,8 @@ export class UtilityExpensesComponent implements OnInit{
 
   
   companyDetails = {
-    name: 'Jupiter King Technologies',
-    address: ' Nrupathunga Road, Kuvempunagar',
+    name: 'JupiterKing Technologies Pvt Ltd.',
+    address: 'Nrupathunga Road, Kuvempunagar',
     city: 'Mysore',
     state: 'Karnataka',
     pincode: '570023',
@@ -191,21 +190,9 @@ export class UtilityExpensesComponent implements OnInit{
   createInvoiceContent(expense: Expense): string {
     const today = new Date();
     const formattedDate = today.toLocaleDateString('en-US');
-    const dueDate = new Date(today);
-    dueDate.setDate(today.getDate() + 30);
-    const formattedDueDate = dueDate.toLocaleDateString('en-US');
-
-    const descriptionItems = [
-      { label: 'Service Fee', amount: expense.expenseAmount * 0.6 },
-      { label: 'Labor: 5 hours at $75/hr', amount: 5 * 75 },
-      { label: 'Parts', amount: expense.expenseAmount * 0.15 },
-    ];
-
-    const subtotal = descriptionItems.reduce((sum, item) => sum + item.amount, 0);
-    const taxRate = 0.0625;
-    const taxableAmount = descriptionItems.find(item => item.label === 'Parts')?.amount || 0;
-    const tax = taxableAmount * taxRate;
-    const total = subtotal + tax;
+  
+    const subtotal = expense.expenseAmount;
+    const total = expense.expenseAmount;
 
     return `
       <!DOCTYPE html>
@@ -311,7 +298,7 @@ export class UtilityExpensesComponent implements OnInit{
               ${this.companyDetails.address}<br>
               ${this.companyDetails.city}, ${this.companyDetails.state} - ${this.companyDetails.pincode}<br>
               Phone: ${this.companyDetails.phone}<br>
-              Website: somedomain.com
+              Website: www.jupiterkingtechnologies.com
             </div>
             <div class="invoice-info">
               <h2 class="invoice-title">INVOICE</h2>
@@ -324,43 +311,29 @@ export class UtilityExpensesComponent implements OnInit{
                   <td><strong>INVOICE #</strong></td>
                   <td>${expense.invoiceNumber}</td>
                 </tr>
-                <tr>
-                  <td><strong>CUSTOMER ID</strong></td>
-                  <td>[123]</td>
-                </tr>
-                <tr>
-                  <td><strong>DUE DATE</strong></td>
-                  <td>${formattedDueDate}</td>
-                </tr>
               </table>
             </div>
           </div>
 
           <div class="bill-to">
             <strong>BILL TO</strong><br>
-            [Name]<br>
-            [Company Name]<br>
-            [Street Address]<br>
-            [City, ST ZIP]<br>
-            [Phone]
+            <p><strong>Bill To:</strong><br>${expense.billingName}<br>${expense.billingAddress}</p> <!-- 🆕 Shows new billing fields -->
           </div>
 
           <table class="details-table">
             <thead>
               <tr>
-                <th>DESCRIPTION</th>
-                <th class="taxed">TAXED</th>
-                <th class="amount">AMOUNT</th>
+                <th>Expense Type</th>
+                <th>Description</th>
+                <th>Amount</th>
               </tr>
             </thead>
             <tbody>
-              ${descriptionItems.map(item => `
                 <tr>
-                  <td>${item.label}</td>
-                  <td class="taxed">${item.label === 'Parts' ? 'X' : ''}</td>
-                  <td class="amount">${item.amount.toFixed(2)}</td>
+                  <td>${expense.expenseType}</td>
+                  <td>${expense.expenseDescription}</td>
+                  <td>$${expense.expenseAmount.toFixed(2)}</td>
                 </tr>
-              `).join('')}
             </tbody>
           </table>
 
@@ -370,45 +343,21 @@ export class UtilityExpensesComponent implements OnInit{
                 <th>Subtotal</th>
                 <td class="amount">${subtotal.toFixed(2)}</td>
               </tr>
-              <tr>
-                <th>Taxable</th>
-                <td class="amount">${taxableAmount.toFixed(2)}</td>
-              </tr>
-              <tr>
-                <th>Tax Rate</th>
-                <td class="amount">${(taxRate * 100).toFixed(2)}%</td>
-              </tr>
-              <tr>
-                <th>Tax Due</th>
-                <td class="amount">${tax.toFixed(2)}</td>
-              </tr>
-              <tr>
-                <th>Other</th>
-                <td class="amount"></td>
-              </tr>
               <tr class="total">
                 <th>TOTAL</th>
-                <td class="amount">$ ${total.toFixed(2)}</td>
+                <td class="amount">&#8377;${total.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
 
-          <div class="other-comments">
-            <strong>OTHER COMMENTS</strong>
-            <ol>
-              <li>Total payment due in 30 days</li>
-              <li>Please include the invoice number on your check</li>
-            </ol>
-          </div>
-
           <div class="payment-info">
             Make all checks payable to<br>
-            [Your Company Name]
+            JupiterKing Technologies Pvt Ltd
           </div>
 
           <div class="footer">
             If you have any questions about this invoice, please contact<br>
-            [Name, Phone #, E-mail]<br>
+            [${this.companyDetails.name},${this.companyDetails.phone}, ${this.companyDetails.email}]<br>
             Thank You For Your Business!
           </div>
         </div>

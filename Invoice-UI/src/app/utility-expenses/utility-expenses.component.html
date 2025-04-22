@@ -14,9 +14,10 @@
       <p style="font-size: 30px">Company Expenses</p>
     </div>
   </div>
+
   <div class="button-container">
     <button class="create-btn" (click)="openModal()">
-      <i class="fas fa-plus"> </i> Create Expense
+      <i class="fas fa-plus"></i> Create Expense
     </button>
 
     <div class="modal" [class.show]="isModalOpen">
@@ -37,20 +38,51 @@
         </div>
 
         <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label for="expenseType">Expense Type</label>
-            <select
-              id="expenseType"
-              formControlName="expenseType"
-              class="form-input"
-            >
-              <option value="">Select Type</option>
-              <option *ngFor="let type of expenseTypes" [value]="type">
-                {{ type }}
-              </option>
-            </select>
-            <div *ngIf="isFieldInvalid('expenseType')" class="error-message">
-              Expense type is required
+          <!-- Three Fields in One Row -->
+          <div class="form-row">
+            <div class="form-group third-width">
+              <label for="expenseType">Expense Type</label>
+              <select
+                id="expenseType"
+                formControlName="expenseType"
+                class="form-input"
+              >
+                <option value="">Select Type</option>
+                <option *ngFor="let type of expenseTypes" [value]="type">
+                  {{ type }}
+                </option>
+              </select>
+              <div *ngIf="isFieldInvalid('expenseType')" class="error-message">
+                Expense type is required
+              </div>
+            </div>
+
+            <div class="form-group third-width">
+              <label for="billingName">Billing Name</label>
+              <input
+                type="text"
+                id="billingName"
+                formControlName="billingName"
+                class="form-input"
+              />
+              <div *ngIf="isFieldInvalid('billingName')" class="error-message">
+                Billing name is required
+              </div>
+            </div>
+
+            <div class="form-group third-width">
+              <label for="billingAddress">Billing Address</label>
+              <textarea
+                id="billingAddress"
+                formControlName="billingAddress"
+                class="form-input"
+              ></textarea>
+              <div
+                *ngIf="isFieldInvalid('billingAddress')"
+                class="error-message"
+              >
+                Billing address is required
+              </div>
             </div>
           </div>
 
@@ -95,12 +127,10 @@
   </div>
 
   <div class="expenses-table">
-    <!-- <h3>Company Expenses</h3> -->
     <table *ngIf="expenses.length > 0" class="table">
       <thead>
         <tr>
           <th>Expense Type</th>
-          <!-- <th>Expense Description</th> -->
           <th>Expense Amount</th>
           <th>Invoice Number</th>
           <th>Date</th>
@@ -110,11 +140,9 @@
       <tbody>
         <tr *ngFor="let expense of expenses">
           <td>{{ expense.expenseType }}</td>
-          <!-- <td>{{ expense.expenseDescription }}</td> -->
           <td>{{ expense.expenseAmount | currency }}</td>
           <td>{{ expense.invoiceNumber }}</td>
           <td>{{ expense.expenseDate | date : "shortDate" }}</td>
-
           <td class="action-buttons">
             <button class="btn-delete" (click)="deleteExpense(expense.id)">
               <i class="fas fa-trash"></i> Delete

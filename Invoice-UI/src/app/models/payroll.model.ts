@@ -33,4 +33,6 @@ export interface PayrollData {
     expenseAmount: number;
     invoiceNumber: string;
     expenseDate: string;
+    billingName: string;
+    billingAddress: string;
 }

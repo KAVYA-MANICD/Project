@@ -349,6 +349,35 @@
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap; /* Responsive on small screens */
+}
+
+.third-width {
+  flex: 1 1 30%;
+  min-width: 200px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-input {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
 
 @media (max-width: 768px) {
   .sidemenu {

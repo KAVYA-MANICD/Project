@@ -38,6 +38,13 @@ public class Expense {
     @Column(name = "invoice_number", nullable = false)
     private String invoiceNumber;
 
+    @NotEmpty(message = "Billing name is required")
+    @Column(name = "billing_name")
+    private String billingName;
+
+    @NotEmpty(message = "Billing address is required")
+    @Column(name = "billing_address")
+    private String billingAddress;
 
     @NotNull(message = "Expense date is required")
     @Temporal(TemporalType.DATE) // Specifies that only the date will be stored (no time).
