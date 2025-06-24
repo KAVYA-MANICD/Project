@@ -14,6 +14,16 @@
       <p style="font-size: 30px">Client Management</p>
     </div>
   </div>
+  <br />
+  <!-- Messages Container -->
+  <div class="messages-container">
+    <div *ngIf="successMessage" class="message success">
+      <i class="fas fa-check-circle"></i> {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="message error">
+      <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
+    </div>
+  </div>
 
   <div class="button-container">
     <button class="create-btn" (click)="openModal()">
@@ -29,7 +39,8 @@
           <th>Name</th>
           <th>Company</th>
           <th>Email</th>
-          <th>Phone</th>
+          <th>Billing Address</th>
+          <th>GSTIN</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -38,7 +49,8 @@
           <td>{{ client.name }}</td>
           <td>{{ client.companyName }}</td>
           <td>{{ client.email }}</td>
-          <td>{{ client.phone }}</td>
+          <td>{{ client.billingAddress }}</td>
+          <td>{{ client.taxId }}</td>
           <td class="action-buttons">
             <button class="btn-edit" (click)="editClient(client)">
               <i class="fas fa-edit"></i> Edit
@@ -64,16 +76,6 @@
           {{ isEditing ? "Edit Client" : "Create Client" }}
         </h2>
         <span class="close" (click)="closeModal()">&times;</span>
-      </div>
-
-      <!-- Messages Container -->
-      <div class="messages-container">
-        <div *ngIf="successMessage" class="message success">
-          <i class="fas fa-check-circle"></i> {{ successMessage }}
-        </div>
-        <div *ngIf="errorMessage" class="message error">
-          <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
-        </div>
       </div>
 
       <!-- Scrollable Form Content -->
@@ -228,9 +230,6 @@
 
       <!-- Fixed Form Actions -->
       <div class="form-actions">
-        <button type="button" class="cancel-btn" (click)="closeModal()">
-          Cancel
-        </button>
         <button
           type="submit"
           [disabled]="!clientForm.valid"

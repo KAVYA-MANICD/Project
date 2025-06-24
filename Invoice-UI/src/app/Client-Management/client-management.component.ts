@@ -18,8 +18,8 @@ export class ClientManagementComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   isModalOpen = false;
-  isEditing = false; // Add this property
-  currentClientId: number | null = null; // Track the client being edited
+  isEditing = false; 
+  currentClientId: number | null = null; 
   countries: string[] = ['India', 'USA', 'UK', 'Canada', 'Australia'];
 
   constructor(
@@ -88,7 +88,6 @@ export class ClientManagementComponent implements OnInit {
       const clientData = this.clientForm.value;
 
       if (this.isEditing && this.currentClientId) {
-        // Update existing client
         this.http.put(`http://localhost:8080/clients/${this.currentClientId}`, clientData)
           .subscribe({
             next: (response) => {
@@ -103,7 +102,6 @@ export class ClientManagementComponent implements OnInit {
             }
           });
       } else {
-        // Create new client
         this.http.post('http://localhost:8080/clients/add', clientData)
           .subscribe({
             next: (response) => {
