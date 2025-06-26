@@ -8,10 +8,6 @@
 
 <div class="container">
   <div class="sidemenu" id="sidebar">
-    <div class="menu-header">
-      <h2><i class="fa fa-bars"> </i> Menu</h2>
-    </div>
-
     <ul>
       <li>
         <a routerLink="/home"><i class="fas fa-home"></i> Home</a>
@@ -22,24 +18,29 @@
         </a>
       </li>
       <li>
-        <a routerLink="/payroll"
-          ><i class="fas fa-users"></i> Payroll Invoice</a
-        >
+        <a routerLink="/payroll">
+          <i class="fas fa-users"></i> Payroll Invoice
+        </a>
       </li>
       <li>
-        <a routerLink="/jupiter"
-          ><i class="fas fa-users"></i> Payroll Invoice (Bank)</a
-        >
+        <a routerLink="/jupiter">
+          <i class="fas fa-users"></i> Payroll Invoice (Bank)
+        </a>
       </li>
       <li>
-        <a routerLink="/utility"
-          ><i class="fas fa-bolt"></i> Utility Expenses</a
-        >
+        <a routerLink="/utility">
+          <i class="fas fa-bolt"></i> Utility Expenses
+        </a>
       </li>
       <li>
-        <a routerLink="/clients"
-          ><i class="fas fa-user-friends"></i> Client Management</a
-        >
+        <a routerLink="/clients">
+          <i class="fas fa-user-friends"></i> Client Management
+        </a>
+      </li>
+      <li>
+        <a routerLink="/client-invoice">
+          <i class="fas fa-file-invoice"></i> Client Invoice Management
+        </a>
       </li>
       <li>
         <a (click)="onLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
