@@ -9,17 +9,13 @@ import { NavbarComponent } from '../navbar/navbar.component';
 interface Invoice {
   id?: number;
   clientId: number;
-  clientName?: string; // Added clientName property
+  clientName?: string;
+  productName: string;
+  quantity: number;
+  rate: number;
   totalAmount: number;
   status: string;
   date: string;
-  lineItems: LineItem[];
-}
-
-interface LineItem {
-  name: string;
-  quantity: number;
-  rate: number;
 }
 
 @Component({
@@ -32,31 +28,32 @@ export class ClientInvoiceManagementComponent implements OnInit {
   invoiceForm: FormGroup;
   invoices: Invoice[] = [];
   clients: any[] = []; 
-  lineItems: LineItem[] = [{ name: '', quantity: 1, rate: 0 }];
   isInvoiceModalOpen = false;
   loading = false;
   successMessage: string | null = null;
   errorMessage: string | null = null;
 
   private apiUrl = 'https://your-api-url.com/api/invoices'; // Replace with your API URL
+  private clientsApiUrl = 'http://localhost:8080/clients/all'; // Replace with your clients API URL
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.invoiceForm = this.fb.group({
       client: ['', Validators.required],
-      dueDate: ['', Validators.required],
-      notes: [''],
+      product: ['', Validators.required],
+      quantity: [1, [Validators.required, Validators.min(1)]],
+      rate: [0, [Validators.required, Validators.min(0)]],
     });
   }
 
   ngOnInit(): void {
-    this.loadClients();
-    this.loadInvoices();
+    this.loadClients(); // Load clients on initialization
+    this.loadInvoices(); // Load invoices on initialization
   }
 
   loadClients(): void {
-    this.http.get<any[]>('https://your-api-url.com/api/clients').subscribe(
+    this.http.get<any[]>(this.clientsApiUrl).subscribe(
       (data) => {
-        this.clients = data;
+        this.clients = data; 
       },
       (error) => {
         console.error('Error fetching clients', error);
@@ -68,7 +65,6 @@ export class ClientInvoiceManagementComponent implements OnInit {
     this.http.get<Invoice[]>(this.apiUrl).subscribe(
       (data) => {
         this.invoices = data;
-        // Optionally, you can map client names here if needed
         this.invoices.forEach(invoice => {
           const client = this.clients.find(c => c.id === invoice.clientId);
           invoice.clientName = client ? client.name : 'Unknown Client'; // Set clientName based on clientId
@@ -83,7 +79,6 @@ export class ClientInvoiceManagementComponent implements OnInit {
   openInvoiceModal(): void {
     this.isInvoiceModalOpen = true;
     this.invoiceForm.reset();
-    this.lineItems = [{ name: '', quantity: 1, rate: 0 }];
     this.successMessage = null;
     this.errorMessage = null;
   }
@@ -92,16 +87,16 @@ export class ClientInvoiceManagementComponent implements OnInit {
     this.isInvoiceModalOpen = false;
   }
 
-  addLineItem(): void {
-    this.lineItems.push({ name: '', quantity: 1, rate: 0 });
+  calculateSubtotal(): number {
+    return this.invoiceForm.value.quantity * this.invoiceForm.value.rate;
   }
 
-  removeLineItem(index: number): void {
-    this.lineItems.splice(index, 1);
+  calculateTaxes(): number {
+    return this.calculateSubtotal() * 0.1; // Assuming 10% tax
   }
 
   calculateTotal(): number {
-    return this.lineItems.reduce((total, item) => total + (item.quantity * item.rate), 0);
+    return this.calculateSubtotal() + this.calculateTaxes();
   }
 
   isFieldInvalid(fieldName: string): boolean {
@@ -117,10 +112,12 @@ export class ClientInvoiceManagementComponent implements OnInit {
     this.loading = true;
     const invoiceData: Invoice = {
       clientId: this.invoiceForm.value.client,
+      productName: this.invoiceForm.value.product,
+      quantity: this.invoiceForm.value.quantity,
+      rate: this.invoiceForm.value.rate,
       totalAmount: this.calculateTotal(),
       status: 'Draft',
       date: new Date().toISOString(),
-      lineItems: this.lineItems,
     };
 
     this.http.post<Invoice>(this.apiUrl, invoiceData).subscribe(
@@ -147,6 +144,10 @@ export class ClientInvoiceManagementComponent implements OnInit {
         console.error('Error deleting invoice', error);
       }
     );
+  }
+
+  generateInvoice(invoiceId: number): void {
+    // Logic to generate invoice
   }
 
   downloadInvoice(invoiceId: number): void {

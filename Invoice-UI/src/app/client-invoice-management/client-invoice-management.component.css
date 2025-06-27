@@ -5,36 +5,21 @@
   padding-top: 15px;
 }
 
-.invoices-table {
-  background-color: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  margin-top: 2rem;
-}
-
-.line-items {
-  margin-bottom: 1.5rem;
-}
-
-.line-item {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 1rem;
-}
-
-.btn-delete {
-  background-color: #dc3545;
+.topbar {
+  background-color: #34495e;
+  border-radius: 8px;
   color: white;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  transition: background-color 0.3s ease;
+  padding: 10px;
+  text-align: center;
+  font-size: 24px; /* Increased font size for better visibility */
+  font-weight: 500;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.btn-delete:hover {
-  background-color: #c82333;
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
 }
 
 .create-btn {
@@ -53,4 +38,233 @@
 
 .create-btn:hover {
   background-color: #45a049;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 0.75rem;
+  width: 90%;
+  max-width: 600px; /* Increased max-width for better layout */
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 1.5rem; /* Adjusted margin for better spacing */
+  color: #0e0f11;
+  font-size: 1.8rem; /* Increased font size for better visibility */
+  font-weight: 600;
+}
+
+.invoice-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem; /* Increased margin for better spacing */
+}
+
+.form-group {
+  flex: 1; /* Allow form groups to take equal space */
+  margin-right: 10px; /* Add space between form groups */
+}
+
+.form-group:last-child {
+  margin-right: 0; /* Remove margin for the last item */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #0c0d0f;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.close {
+  position: absolute;
+  right: 1.5rem;
+  top: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  padding: 0.5rem;
+  line-height: 1;
+}
+
+.invoices-table {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 1rem 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #101111;
+}
+
+.table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.message {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.message i {
+  margin-right: 0.5rem;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+.btn-generate,
+.btn-download {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-generate:hover,
+.btn-download:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column; /* Stack fields vertically on small screens */
+  }
+
+  .form-group {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem;
+  }
+}
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 0.5rem 1rem; /* Reduced padding */
+  border: none;
+  border-radius: 0.25rem; /* Slightly smaller border radius */
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px; /* Reduced font size */
+  transition: background-color 0.3s ease;
+  width: 10em; /* Set a specific width for the button */
+  margin-top: 1rem;
+}
+
+.submit-btn:disabled {
+  background-color: #a0c5f5;
+  cursor: not-allowed;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #0056b3;
 }

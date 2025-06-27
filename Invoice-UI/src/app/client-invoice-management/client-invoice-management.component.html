@@ -11,10 +11,10 @@
 <div class="content">
   <div class="topbar">
     <div class="topbar-content">
-      <p style="font-size: 30px">Invoice Management</p>
+      <p style="font-size: 30px">Client Invoice Management</p>
     </div>
   </div>
-
+  <br />
   <div class="button-container">
     <button class="create-btn" (click)="openInvoiceModal()">
       <i class="fas fa-plus"></i> Create Invoice
@@ -24,7 +24,7 @@
       <div class="modal-content">
         <span class="close" (click)="closeInvoiceModal()">&times;</span>
         <h2 class="form-title">Invoice Details</h2>
-
+        <br />
         <div *ngIf="successMessage" class="message success">
           <i class="fas fa-check-circle"></i> {{ successMessage }}
         </div>
@@ -37,99 +37,97 @@
           <i class="fas fa-spinner fa-spin"></i> Processing...
         </div>
 
-        <form [formGroup]="invoiceForm" (ngSubmit)="onInvoiceSubmit()">
+        <form
+          [formGroup]="invoiceForm"
+          (ngSubmit)="onInvoiceSubmit()"
+          class="invoice-form"
+        >
           <div class="form-row">
-            <div class="form-group third-width">
+            <div class="form-group">
               <label for="client">Select Client</label>
               <select id="client" formControlName="client" class="form-input">
                 <option value="">Select Client</option>
                 <option *ngFor="let client of clients" [value]="client.id">
-                  {{ client.name }}
+                  {{ client.companyName }}
                 </option>
-                <option value="addNew">Add New Client</option>
               </select>
               <div *ngIf="isFieldInvalid('client')" class="error-message">
                 Client selection is required
               </div>
             </div>
 
-            <div class="form-group third-width">
-              <label for="dueDate">Due Date</label>
+            <div class="form-group">
+              <label for="product">Product/Service Name</label>
               <input
-                type="date"
-                id="dueDate"
-                formControlName="dueDate"
+                type="text"
+                id="product"
+                formControlName="product"
                 class="form-input"
               />
-              <div *ngIf="isFieldInvalid('dueDate')" class="error-message">
-                Due date is required
+              <div *ngIf="isFieldInvalid('product')" class="error-message">
+                Product/Service name is required
               </div>
             </div>
+          </div>
 
-            <div class="form-group third-width">
-              <label for="notes">Notes</label>
-              <textarea
-                id="notes"
-                formControlName="notes"
+          <div class="form-row">
+            <div class="form-group">
+              <label for="quantity">Quantity</label>
+              <input
+                type="number"
+                id="quantity"
+                formControlName="quantity"
                 class="form-input"
-              ></textarea>
+              />
+              <div *ngIf="isFieldInvalid('quantity')" class="error-message">
+                Quantity is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="rate">Rate</label>
+              <input
+                type="number"
+                id="rate"
+                formControlName="rate"
+                class="form-input"
+              />
+              <div *ngIf="isFieldInvalid('rate')" class="error-message">
+                Rate is required
+              </div>
             </div>
           </div>
 
-          <div class="line-items">
-            <h3>Line Items</h3>
-            <div
-              *ngFor="let item of lineItems; let i = index"
-              class="line-item"
-            >
-              <div class="form-group">
-                <label for="itemName{{ i }}">Item Name</label>
-                <input
-                  type="text"
-                  id="itemName{{ i }}"
-                  [(ngModel)]="item.name"
-                  class="form-input"
-                />
-              </div>
-              <div class="form-group">
-                <label for="itemQuantity{{ i }}">Quantity</label>
-                <input
-                  type="number"
-                  id="itemQuantity{{ i }}"
-                  [(ngModel)]="item.quantity"
-                  class="form-input"
-                />
-              </div>
-              <div class="form-group">
-                <label for="itemRate{{ i }}">Rate</label>
-                <input
-                  type="number"
-                  id="itemRate{{ i }}"
-                  [(ngModel)]="item.rate"
-                  class="form-input"
-                />
-              </div>
-              <button
-                type="button"
-                (click)="removeLineItem(i)"
-                class="btn-delete"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Subtotal</label>
+              <input
+                type="text"
+                [value]="calculateSubtotal()"
+                class="form-input"
+                readonly
+              />
             </div>
-            <button type="button" (click)="addLineItem()" class="create-btn">
-              <i class="fas fa-plus"></i> Add Line Item
-            </button>
-          </div>
 
-          <div class="form-group">
-            <label>Total</label>
-            <input
-              type="text"
-              [value]="calculateTotal()"
-              class="form-input"
-              readonly
-            />
+            <div class="form-group">
+              <label>Taxes</label>
+              <input
+                type="text"
+                [value]="calculateTaxes()"
+                class="form-input"
+                readonly
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Total</label>
+              <input
+                type="text"
+                [value]="calculateTotal()"
+                class="form-input"
+                readonly
+              />
+            </div>
           </div>
 
           <button
@@ -149,6 +147,9 @@
       <thead>
         <tr>
           <th>Client</th>
+          <th>Product/Service Name</th>
+          <th>Rate</th>
+          <th>Quantity</th>
           <th>Total Amount</th>
           <th>Status</th>
           <th>Date</th>
@@ -158,7 +159,9 @@
       <tbody>
         <tr *ngFor="let invoice of invoices">
           <td>{{ invoice.clientName }}</td>
-          <!-- Use clientName here -->
+          <td>{{ invoice.productName }}</td>
+          <td>{{ invoice.rate | currency }}</td>
+          <td>{{ invoice.quantity }}</td>
           <td>{{ invoice.totalAmount | currency }}</td>
           <td>{{ invoice.status }}</td>
           <td>{{ invoice.date | date : "shortDate" }}</td>
@@ -168,15 +171,20 @@
               (click)="deleteInvoice(invoice.id!)"
               *ngIf="invoice.id"
             >
-              <!-- Use non-null assertion operator -->
               <i class="fas fa-trash"></i> Delete
+            </button>
+            <button
+              class="btn-generate"
+              (click)="generateInvoice(invoice.id!)"
+              *ngIf="invoice.id"
+            >
+              <i class="fas fa-file-invoice"></i> Generate Invoice
             </button>
             <button
               class="btn-download"
               (click)="downloadInvoice(invoice.id!)"
               *ngIf="invoice.id"
             >
-              <!-- Use non-null assertion operator -->
               <i class="fas fa-download"></i> Download PDF
             </button>
           </td>
