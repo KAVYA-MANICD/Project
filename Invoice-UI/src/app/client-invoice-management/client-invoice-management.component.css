@@ -268,3 +268,26 @@
 .submit-btn:hover:not(:disabled) {
   background-color: #0056b3;
 }
+/* ↓ Smaller input fields */
+.form-input {
+  padding: 0.5rem; /* Reduced from 0.75rem */
+  font-size: 0.9rem; /* Reduced from 1rem */
+  border-radius: 0.4rem; /* Slightly smaller */
+}
+
+/* ↓ Form row spacing adjustments */
+.form-row {
+  margin-bottom: 1rem; /* Reduced from 1.5rem */
+  gap: 10px; /* Add spacing for flex children */
+}
+
+/* ↓ Label adjustments */
+.form-group label {
+  margin-bottom: 0.3rem; /* Less vertical spacing */
+  font-size: 0.9rem; /* Slightly smaller */
+}
+
+/* ↓ Description textarea size */
+textarea.form-input {
+  min-height: 60px;
+}

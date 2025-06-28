@@ -20,7 +20,7 @@ public class InvoiceController {
     private final InvoiceRepository invoiceRepository;
     private final ClientRepository clientRepository;
 
-    // Create Invoice
+    // ✅ Create Invoice (now includes optional description field)
     @PostMapping("/add")
     public ResponseEntity<?> createInvoice(@RequestBody Invoice invoice) {
         Long clientId = invoice.getClient().getId();
@@ -61,4 +61,3 @@ public class InvoiceController {
         return invoiceRepository.findByInvoiceNumberContainingIgnoreCase(query);
     }
 }
-

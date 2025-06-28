@@ -20,7 +20,7 @@ public class Invoice {
 
     private String invoiceNumber; // Auto-generated
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
@@ -38,10 +38,11 @@ public class Invoice {
 
     private LocalDate date;
 
+    private String description;
+
     @PrePersist
     public void prePersist() {
         this.invoiceNumber = "INV-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         this.date = LocalDate.now();
     }
 }
-
