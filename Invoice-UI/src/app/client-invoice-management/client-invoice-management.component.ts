@@ -7,218 +7,227 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../navbar/navbar.component';
 
 interface Client {
-  id: number;
-  companyName: string;
+    id: number;
+    companyName: string;
 }
 
 interface Invoice {
-  id?: number;
-  invoiceNumber?: string;
-  client: { id: number };
-  clientName?: string; // for display
-  productOrService: string;
-  quantity: number;
-  rate: number;
-  subtotal?: number;
-  taxes?: number;
-  total?: number;
-  date?: string;
-  description?: string;
+    id?: number;
+    invoiceNumber?: string;
+    client: { id: number };
+    clientName?: string; // for display
+    productOrService: string;
+    quantity: number;
+    rate: number;
+    subtotal?: number;
+    taxes?: number;
+    total?: number;
+    date?: string;
+    description?: string;
 }
 
 @Component({
-  selector: 'app-client-invoice-management',
-  standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterModule, NavbarComponent],
-  templateUrl: './client-invoice-management.component.html',
-  styleUrls: ['./client-invoice-management.component.css']
+    selector: 'app-client-invoice-management',
+    standalone: true,
+    imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterModule, NavbarComponent],
+    templateUrl: './client-invoice-management.component.html',
+    styleUrls: ['./client-invoice-management.component.css']
 })
 export class ClientInvoiceManagementComponent implements OnInit {
-  invoiceForm: FormGroup;
-  invoices: Invoice[] = [];
-  clients: Client[] = [];
-  isInvoiceModalOpen = false;
-  loading = false;
-  successMessage: string | null = null;
-  errorMessage: string | null = null;
+    invoiceForm: FormGroup;
+    invoices: Invoice[] = [];
+    clients: Client[] = [];
+    isInvoiceModalOpen = false;
+    loading = false;
+    successMessage: string | null = null;
+    errorMessage: string | null = null;
 
-  private invoiceApiUrl = 'http://localhost:8080/invoices';
-  private clientsApiUrl = 'http://localhost:8080/clients/all';
+    private invoiceApiUrl = 'http://localhost:8080/invoices';
+    private clientsApiUrl = 'http://localhost:8080/clients/all';
 
-  companyDetails = {
-    name: 'Your Company Name Pvt Ltd.',
-    address: 'Your Address Line 1',
-    city: 'Your City',
-    state: 'Your State',
-    pincode: '123456',
-    phone: '123-456-7890',
-    email: 'contact@yourcompany.com'
-  };
-
-  generatedInvoiceHtml: string | null = null; // holds generated invoice HTML to show in UI
-
-  constructor(private fb: FormBuilder, private http: HttpClient) {
-    this.invoiceForm = this.fb.group({
-      client: ['', Validators.required],
-      product: ['', Validators.required],
-      quantity: [1, [Validators.required, Validators.min(1)]],
-      rate: [0, [Validators.required, Validators.min(0)]],
-      description: ['']
-    });
-  }
-
-  ngOnInit(): void {
-    this.loadClients();
-  }
-
-  loadClients(): void {
-    this.http.get<Client[]>(this.clientsApiUrl).subscribe({
-      next: (data) => {
-        this.clients = data;
-        this.loadInvoices(); // Load invoices after clients loaded
-      },
-      error: (err) => {
-        console.error('Failed to fetch clients:', err);
-      }
-    });
-  }
-
-  loadInvoices(): void {
-    this.http.get<Invoice[]>(`${this.invoiceApiUrl}/all`).subscribe({
-      next: (data) => {
-        this.invoices = data.map(inv => {
-          const client = this.clients.find(c => c.id === inv.client.id);
-          return {
-            ...inv,
-            clientName: client?.companyName || 'Unknown'
-          };
-        });
-      },
-      error: (err) => {
-        console.error('Failed to fetch invoices:', err);
-      }
-    });
-  }
-
-  openInvoiceModal(): void {
-    this.invoiceForm.reset({
-      client: '',
-      product: '',
-      quantity: 1,
-      rate: 0,
-      description: ''
-    });
-    this.successMessage = null;
-    this.errorMessage = null;
-    this.isInvoiceModalOpen = true;
-    this.generatedInvoiceHtml = null; // clear any previously generated invoice
-  }
-
-  closeInvoiceModal(): void {
-    this.isInvoiceModalOpen = false;
-    this.generatedInvoiceHtml = null;
-  }
-
-  calculateSubtotal(): number {
-    const { quantity, rate } = this.invoiceForm.value;
-    return quantity * rate;
-  }
-
-  calculateTaxes(): number {
-    return this.calculateSubtotal() * 0.18; // 18% GST
-  }
-
-  calculateTotal(): number {
-    return this.calculateSubtotal() + this.calculateTaxes();
-  }
-
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.invoiceForm.get(fieldName);
-    return !!(field && field.invalid && (field.dirty || field.touched));
-  }
-
-  onInvoiceSubmit(): void {
-    if (this.invoiceForm.invalid) return;
-
-    this.loading = true;
-
-    const formValues = this.invoiceForm.value;
-    const subtotal = this.calculateSubtotal();
-    const taxes = this.calculateTaxes();
-    const total = this.calculateTotal();
-
-    const invoicePayload: Invoice = {
-      client: { id: formValues.client },
-      productOrService: formValues.product,
-      quantity: formValues.quantity,
-      rate: formValues.rate,
-      subtotal,
-      taxes,
-      total,
-      description: formValues.description
+    companyDetails = {
+        name: 'JupiterKing Technologies Pvt Ltd.',
+        address: 'Nrupathunga Road, Kuvempunagar',
+        city: 'Mysore',
+        state: ' Karnataka',
+        pincode: '570023',
+        phone: '91+ 7259489277',
+        email: 'jupiterkingtechnologies@gmail.com'
     };
 
-    this.http.post<Invoice>(`${this.invoiceApiUrl}/add`, invoicePayload).subscribe({
-      next: (newInvoice) => {
-        const client = this.clients.find(c => c.id === newInvoice.client.id);
-        newInvoice.clientName = client?.companyName || 'Unknown';
-        this.invoices.push(newInvoice);
-        this.successMessage = 'Invoice created successfully!';
-        this.closeInvoiceModal();
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error creating invoice:', err);
-        this.errorMessage = 'Error creating invoice. Please try again.';
-        this.loading = false;
-      }
-    });
-  }
-
-  deleteInvoice(invoiceId: number): void {
-    this.http.delete(`${this.invoiceApiUrl}/${invoiceId}`).subscribe({
-      next: () => {
-        this.invoices = this.invoices.filter(i => i.id !== invoiceId);
-      },
-      error: (err) => {
-        console.error('Error deleting invoice:', err);
-      }
-    });
-  }
-
-  downloadInvoice(invoiceId: number): void {
-    // Opens a new tab to download the invoice PDF or file from the backend
-    window.open(`${this.invoiceApiUrl}/${invoiceId}/download`, '_blank');
-  }
-
-  generateInvoice(invoiceId: number): void {
-    // Find invoice to generate
-    const invoice = this.invoices.find(inv => inv.id === invoiceId);
-    if (!invoice) {
-      this.errorMessage = 'Invoice not found!';
-      return;
+    constructor(private fb: FormBuilder, private http: HttpClient) {
+        this.invoiceForm = this.fb.group({
+            client: ['', Validators.required],
+            product: ['', Validators.required],
+            quantity: [1, [Validators.required, Validators.min(1)]],
+            rate: [0, [Validators.required, Validators.min(0)]],
+            description: ['']
+        });
     }
-    this.generatedInvoiceHtml = this.createInvoiceContent(invoice);
-    
-    // Optionally, open a new print window as well
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(this.generatedInvoiceHtml);
-      printWindow.document.close();
-      printWindow.focus();
-      // Uncomment to auto-print
-      // printWindow.print();
+
+    ngOnInit(): void {
+        this.loadClients();
     }
-  }
 
-  private createInvoiceContent(invoice: Invoice): string {
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString('en-US');
-    const subtotal = invoice.subtotal ?? this.calculateSubtotal();
-    const taxes = invoice.taxes ?? this.calculateTaxes();
-    const total = invoice.total ?? this.calculateTotal();
+    loadClients(): void {
+        this.http.get<Client[]>(this.clientsApiUrl).subscribe({
+            next: (data) => {
+                this.clients = data;
+                this.loadInvoices(); // Load invoices after clients loaded
+            },
+            error: (err) => {
+                console.error('Failed to fetch clients:', err);
+            }
+        });
+    }
 
-    return `
+    loadInvoices(): void {
+        this.http.get<Invoice[]>(`${this.invoiceApiUrl}/all`).subscribe({
+            next: (data) => {
+                this.invoices = data.map(inv => {
+                    const client = this.clients.find(c => c.id === inv.client.id);
+                    return {
+                        ...inv,
+                        clientName: client?.companyName || 'Unknown'
+                    };
+                });
+            },
+            error: (err) => {
+                console.error('Failed to fetch invoices:', err);
+            }
+        });
+    }
+
+    openInvoiceModal(): void {
+        this.invoiceForm.reset({
+            client: '',
+            product: '',
+            quantity: 1,
+            rate: 0,
+            description: ''
+        });
+        this.successMessage = null;
+        this.errorMessage = null;
+        this.isInvoiceModalOpen = true;
+    }
+
+    closeInvoiceModal(): void {
+        this.isInvoiceModalOpen = false;
+    }
+
+    calculateSubtotal(): number {
+        const { quantity, rate } = this.invoiceForm.value;
+        return quantity * rate;
+    }
+
+    calculateTaxes(): number {
+        return this.calculateSubtotal() * 0.18; // 18% GST
+    }
+
+    calculateTotal(): number {
+        return this.calculateSubtotal() + this.calculateTaxes();
+    }
+
+    isFieldInvalid(fieldName: string): boolean {
+        const field = this.invoiceForm.get(fieldName);
+        return !!(field && field.invalid && (field.dirty || field.touched));
+    }
+
+    onInvoiceSubmit(): void {
+        if (this.invoiceForm.invalid) return;
+
+        this.loading = true;
+
+        const formValues = this.invoiceForm.value;
+        const subtotal = this.calculateSubtotal();
+        const taxes = this.calculateTaxes();
+        const total = this.calculateTotal();
+
+        const invoicePayload: Invoice = {
+            client: { id: formValues.client },
+            productOrService: formValues.product,
+            quantity: formValues.quantity,
+            rate: formValues.rate,
+            subtotal,
+            taxes,
+            total,
+            description: formValues.description
+        };
+
+        this.http.post<Invoice>(`${this.invoiceApiUrl}/add`, invoicePayload).subscribe({
+            next: (newInvoice) => {
+                const client = this.clients.find(c => c.id === newInvoice.client.id);
+                newInvoice.clientName = client?.companyName || 'Unknown';
+                this.invoices.push(newInvoice);
+                this.successMessage = 'Invoice created successfully!';
+                this.closeInvoiceModal();
+                this.loading = false;
+            },
+            error: (err) => {
+                console.error('Error creating invoice:', err);
+                this.errorMessage = 'Error creating invoice. Please try again.';
+                this.loading = false;
+            }
+        });
+    }
+
+    deleteInvoice(invoiceId: number): void {
+        this.http.delete(`${this.invoiceApiUrl}/${invoiceId}`).subscribe({
+            next: () => {
+                this.invoices = this.invoices.filter(i => i.id !== invoiceId);
+            },
+            error: (err) => {
+                console.error('Error deleting invoice:', err);
+            }
+        });
+    }
+
+    downloadInvoice(invoiceId: number): void {
+        const invoice = this.invoices.find(inv => inv.id === invoiceId);
+        if (!invoice) {
+            this.errorMessage = 'Invoice not found!';
+            return;
+        }
+
+        const htmlContent = this.createInvoiceContent(invoice);
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Invoice_${invoice.invoiceNumber || Date.now()}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    generateInvoice(invoiceId: number): void {
+        // Find invoice to generate
+        const invoice = this.invoices.find(inv => inv.id === invoiceId);
+        if (!invoice) {
+            this.errorMessage = 'Invoice not found!';
+            return;
+        }
+        // Optionally, open a new print window as well
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+            printWindow.document.write(this.createInvoiceContent(invoice));
+            printWindow.document.close();
+            printWindow.focus();
+            // Uncomment to auto-print
+            // printWindow.print();
+        }
+    }
+
+    private createInvoiceContent(invoice: Invoice): string {
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString('en-US');
+        const subtotal = invoice.subtotal ?? this.calculateSubtotal();
+        const taxes = invoice.taxes ?? this.calculateTaxes();
+        const total = invoice.total ?? this.calculateTotal();
+
+        return `
       <!DOCTYPE html>
       <html>
       <head>
@@ -352,5 +361,5 @@ export class ClientInvoiceManagementComponent implements OnInit {
       </body>
       </html>
     `;
-  }
+    }
 }
