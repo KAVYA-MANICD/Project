@@ -15,7 +15,7 @@ interface Invoice {
     id?: number;
     invoiceNumber?: string;
     client: { id: number };
-    clientName?: string; // for display
+    clientName?: string; 
     productOrService: string;
     quantity: number;
     rate: number;
@@ -49,10 +49,10 @@ export class ClientInvoiceManagementComponent implements OnInit {
         name: 'JupiterKing Technologies Pvt Ltd.',
         address: 'Nrupathunga Road, Kuvempunagar',
         city: 'Mysore',
-        state: ' Karnataka',
+        state: 'Karnataka',
         pincode: '570023',
         phone: '91+ 7259489277',
-        email: 'jupiterkingtechnologies@gmail.com'
+        email: 'jupiterkingtechnology@gmail.com'
     };
 
     constructor(private fb: FormBuilder, private http: HttpClient) {
@@ -73,7 +73,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
         this.http.get<Client[]>(this.clientsApiUrl).subscribe({
             next: (data) => {
                 this.clients = data;
-                this.loadInvoices(); // Load invoices after clients loaded
+                this.loadInvoices();
             },
             error: (err) => {
                 console.error('Failed to fetch clients:', err);
@@ -121,7 +121,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
     }
 
     calculateTaxes(): number {
-        return this.calculateSubtotal() * 0.18; // 18% GST
+        return this.calculateSubtotal() * 0.18;
     }
 
     calculateTotal(): number {
@@ -182,6 +182,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
         });
     }
 
+    // ✅ Updated downloadInvoice: opens print dialog for "Save as PDF"
     downloadInvoice(invoiceId: number): void {
         const invoice = this.invoices.find(inv => inv.id === invoiceId);
         if (!invoice) {
@@ -190,176 +191,131 @@ export class ClientInvoiceManagementComponent implements OnInit {
         }
 
         const htmlContent = this.createInvoiceContent(invoice);
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Invoice_${invoice.invoiceNumber || Date.now()}.html`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        const printWindow = window.open('', '_blank', 'width=800,height=600');
+
+        if (printWindow) {
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
+
+            printWindow.onload = () => {
+                printWindow.focus();
+                printWindow.print();
+                // Optional: close after print
+                // printWindow.onafterprint = () => printWindow.close();
+            };
+        } else {
+            this.errorMessage = 'Unable to open print window.';
+        }
     }
 
     generateInvoice(invoiceId: number): void {
-        // Find invoice to generate
         const invoice = this.invoices.find(inv => inv.id === invoiceId);
         if (!invoice) {
             this.errorMessage = 'Invoice not found!';
             return;
         }
-        // Optionally, open a new print window as well
+
         const printWindow = window.open('', '_blank');
         if (printWindow) {
             printWindow.document.write(this.createInvoiceContent(invoice));
             printWindow.document.close();
             printWindow.focus();
-            // Uncomment to auto-print
-            // printWindow.print();
         }
     }
 
-    private createInvoiceContent(invoice: Invoice): string {
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString('en-US');
-        const subtotal = invoice.subtotal ?? this.calculateSubtotal();
-        const taxes = invoice.taxes ?? this.calculateTaxes();
-        const total = invoice.total ?? this.calculateTotal();
+   private createInvoiceContent(invoice: Invoice): string {
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-US');
+    const subtotal = invoice.subtotal ?? this.calculateSubtotal();
+    const taxes = invoice.taxes ?? this.calculateTaxes();
+    const total = invoice.total ?? this.calculateTotal();
 
-        return `
-      <!DOCTYPE html>
-      <html>
-      <head>
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
         <meta charset="utf-8" />
         <title>Invoice #${invoice.invoiceNumber || ''}</title>
         <style>
-          body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            font-size: 14px;
-            color: #333;
-          }
-          .invoice-container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-          }
-          header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-          }
-          .company-details {
-            font-weight: bold;
-            font-size: 18px;
-          }
-          .invoice-details {
-            text-align: right;
-          }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-          }
-          th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-          }
-          th {
-            background: #f4f4f4;
-          }
-          .totals {
-            margin-top: 20px;
-            float: right;
-            width: 300px;
-          }
-          .totals table {
-            border: none;
-          }
-          .totals th, .totals td {
-            border: none;
-            padding: 5px 10px;
-          }
-          .totals th {
-            text-align: left;
-          }
-          .footer {
-            margin-top: 50px;
-            text-align: center;
-            font-size: 12px;
-            color: #888;
-          }
+            body { font-family: Arial, sans-serif; margin: 20px; font-size: 14px; color: #333; }
+            .invoice-container { max-width: 800px; margin: auto; padding: 20px; } /* ✅ No border here */
+            header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+            .company-details { font-weight: bold; font-size: 18px; }
+            .invoice-details { text-align: right; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background: #f4f4f4; }
+            .totals { margin-top: 20px; float: right; width: 300px; }
+            .totals table { border: none; }
+            .totals th, .totals td { border: none; padding: 5px 10px; }
+            .totals th { text-align: left; }
+            .footer { margin-top: 50px; text-align: center; font-size: 12px; color: #888; }
         </style>
-      </head>
-      <body>
+    </head>
+    <body>
         <div class="invoice-container">
-          <header>
-            <div class="company-details">
-              <div>${this.companyDetails.name}</div>
-              <div>${this.companyDetails.address}</div>
-              <div>${this.companyDetails.city}, ${this.companyDetails.state} - ${this.companyDetails.pincode}</div>
-              <div>Phone: ${this.companyDetails.phone}</div>
-              <div>Email: ${this.companyDetails.email}</div>
-            </div>
-            <div class="invoice-details">
-              <h2>Invoice</h2>
-              <div>Date: ${formattedDate}</div>
-              <div>Invoice #: ${invoice.invoiceNumber || 'N/A'}</div>
-            </div>
-          </header>
+            <header>
+                <div class="company-details">
+                    <div>${this.companyDetails.name}</div>
+                    <div>${this.companyDetails.address}</div>
+                    <div>${this.companyDetails.city}, ${this.companyDetails.state} - ${this.companyDetails.pincode}</div>
+                    <div>Phone: ${this.companyDetails.phone}</div>
+                    <div>Email: ${this.companyDetails.email}</div>
+                </div>
+                <div class="invoice-details">
+                    <h2>Invoice</h2>
+                    <div>Date: ${formattedDate}</div>
+                    <div>Invoice No: ${invoice.invoiceNumber || 'N/A'}</div>
+                </div>
+            </header>
 
-          <section>
-            <h3>Bill To:</h3>
-            <p>${invoice.clientName || 'Unknown Client'}</p>
-          </section>
+            <section>
+                <h3>Bill To:</h3>
+                <p>${invoice.clientName || 'Unknown Client'}</p>
+            </section>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Product/Service</th>
-                <th>Description</th>
-                <th>Quantity</th>
-                <th>Rate</th>
-                <th>Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>${invoice.productOrService}</td>
-                <td>${invoice.description || '-'}</td>
-                <td>${invoice.quantity}</td>
-                <td>${invoice.rate.toFixed(2)}</td>
-                <td>${subtotal.toFixed(2)}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="totals">
             <table>
-              <tr>
-                <th>Taxes (18% GST):</th>
-                <td>${taxes.toFixed(2)}</td>
-              </tr>
-              <tr>
-                <th>Total:</th>
-                <td><strong>${total.toFixed(2)}</strong></td>
-              </tr>
+                <thead>
+                    <tr>
+                        <th>Product/Service</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Rate</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>${invoice.productOrService}</td>
+                        <td>${invoice.description || '-'}</td>
+                        <td>${invoice.quantity}</td>
+                        <td>${invoice.rate.toFixed(2)}</td>
+                        <td>${subtotal.toFixed(2)}</td>
+                    </tr>
+                </tbody>
             </table>
-          </div>
 
-          <div style="clear: both;"></div>
+            <div class="totals">
+                <table>
+                    <tr>
+                        <th>Taxes (18% GST):</th>
+                        <td>${taxes.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <th>Total:</th>
+                        <td><strong>${total.toFixed(2)}</strong></td>
+                    </tr>
+                </table>
+            </div>
 
-          <div class="footer">
-            Thank you for your business!<br />
-            If you have questions, contact us at ${this.companyDetails.email}
-          </div>
+            <div style="clear: both;"></div>
+
+            <div class="footer">
+                Thank you for your business!<br />
+                If you have questions, contact us at ${this.companyDetails.email}
+            </div>
         </div>
-      </body>
-      </html>
-    `;
-    }
+    </body>
+    </html>`;
+}
 }

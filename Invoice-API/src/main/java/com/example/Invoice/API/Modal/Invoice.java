@@ -3,7 +3,11 @@ package com.example.Invoice.API.Modal;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -18,7 +22,7 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String invoiceNumber; // Auto-generated
+    private String invoiceNumber;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
@@ -40,9 +44,25 @@ public class Invoice {
 
     private String description;
 
+    // Static map to track daily invoice counters
+    private static final Map<String, Integer> dailyInvoiceCounter = new HashMap<>();
+
     @PrePersist
     public void prePersist() {
-        this.invoiceNumber = "INV-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        this.date = LocalDate.now();
+        if (this.invoiceNumber == null || this.invoiceNumber.isEmpty()) {
+            this.invoiceNumber = generateInvoiceNumber();
+        }
+        if (this.date == null) {
+            this.date = LocalDate.now();
+        }
+    }
+
+    private String generateInvoiceNumber() {
+        String datePart = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        int count = dailyInvoiceCounter.getOrDefault(datePart, 0) + 1;
+        dailyInvoiceCounter.put(datePart, count);
+
+        String sequencePart = String.format("%04d", count);
+        return "INV-" + datePart + "-" + sequencePart;
     }
 }
