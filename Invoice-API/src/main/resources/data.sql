@@ -1,4 +1,4 @@
-DELETE FROM admins;
+ DELETE FROM admins;
 --
 --INSERT INTO admins (email, password) VALUES ('admin@example.com', 'admin123');
 INSERT INTO admins (email, password) VALUES ('admin@example.com', 'YWRtaW4xMjM=');
