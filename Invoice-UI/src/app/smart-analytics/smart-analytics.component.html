@@ -1,0 +1,34 @@
+<div class="analytics-container">
+  <h2>Smart Analytics</h2>
+
+  <div *ngIf="loading">Loading metrics...</div>
+  <div *ngIf="error">{{ error }}</div>
+
+  <div *ngIf="!loading && !error">
+    <div class="metric">
+      <h3>Total Invoices</h3>
+      <p>{{ metrics.totalInvoices }}</p>
+    </div>
+
+    <div class="metric">
+      <h3>Total Revenue</h3>
+      <p>{{ metrics.totalRevenue | currency:'USD' }}</p>
+    </div>
+
+    <div class="metric">
+      <h3>Average Invoice Value</h3>
+      <p>{{ metrics.averageInvoiceValue | currency:'USD' }}</p>
+    </div>
+
+    <div class="metric">
+      <h3>Invoices by Month (simple list)</h3>
+      <ul>
+        <li *ngFor="let m of metrics.invoicesPerMonth">{{ m.month }}: {{ m.count }}</li>
+      </ul>
+    </div>
+    <div class="metric">
+      <h3>Invoices by Month (chart)</h3>
+      <canvas id="invoicesChart" width="800" height="320"></canvas>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+.analytics-container { padding: 24px; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 1100px; margin: 0 auto; }
+.analytics-container h2 { font-size: 28px; margin-bottom: 18px; }
+.metric { border: 1px solid #eee; padding: 18px; margin-bottom: 18px; border-radius: 8px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.metric h3 { margin: 0 0 8px 0; font-size: 18px; }
+.metric p { margin: 0; font-size: 20px; font-weight: 600; }
+.metric ul { margin: 0; padding-left: 18px; }
+.metric canvas { width: 100% !important; height: 320px !important; display: block; }

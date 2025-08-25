@@ -8,6 +8,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { UtilityExpensesComponent } from './utility-expenses/utility-expenses.component';
 import { ClientManagementComponent } from './Client-Management/client-management.component';
 import { ClientInvoiceManagementComponent } from './client-invoice-management/client-invoice-management.component'; // Import the component
+import { SmartAnalyticsComponent } from './smart-analytics/smart-analytics.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -20,4 +21,5 @@ export const routes: Routes = [
     { path: 'Expensetype', component: ExpensesTypeManagementComponent },
     { path: 'clients', component: ClientManagementComponent },
     { path: 'client-invoice', component: ClientInvoiceManagementComponent } // Added route for Client Invoice Management
+    ,{ path: 'analytics', component: SmartAnalyticsComponent }
 ];
