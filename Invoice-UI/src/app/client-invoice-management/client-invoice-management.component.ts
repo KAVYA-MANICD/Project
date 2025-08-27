@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { ProductService, ProductServiceService } from '../product-service.service';
 
 interface Client {
     id: number;
@@ -29,7 +30,7 @@ interface Invoice {
 @Component({
     selector: 'app-client-invoice-management',
     standalone: true,
-    imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterModule, NavbarComponent],
+    imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterModule, NavbarComponent, HttpClientModule],
     templateUrl: './client-invoice-management.component.html',
     styleUrls: ['./client-invoice-management.component.css']
 })
@@ -38,6 +39,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
     invoices: Invoice[] = [];
     filteredInvoices: Invoice[] = [];
     clients: Client[] = [];
+    productServices: ProductService[] = [];
     searchText: string = '';
     isInvoiceModalOpen = false;
     loading = false;
@@ -48,8 +50,6 @@ export class ClientInvoiceManagementComponent implements OnInit {
     isWarningModalOpen = false;
     warningMessage = '';
     private invoicePayloadForProceed: Invoice | null = null;
-
-    
 
     private invoiceApiUrl = 'http://localhost:8080/invoices';
     private clientsApiUrl = 'http://localhost:8080/clients/all';
@@ -64,7 +64,11 @@ export class ClientInvoiceManagementComponent implements OnInit {
         email: 'jupiterkingtechnology@gmail.com'
     };
 
-    constructor(private fb: FormBuilder, private http: HttpClient) {
+    constructor(
+        private fb: FormBuilder,
+        private http: HttpClient,
+        private productServiceService: ProductServiceService
+    ) {
         this.invoiceForm = this.fb.group({
             client: ['', Validators.required],
             product: ['', Validators.required],
@@ -77,6 +81,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadClients();
+        this.loadProductServices();
     }
 
     loadClients(): void {
@@ -89,6 +94,25 @@ export class ClientInvoiceManagementComponent implements OnInit {
                 console.error('Failed to fetch clients:', err);
             }
         });
+    }
+
+    loadProductServices(): void {
+        this.productServiceService.getProductServices().subscribe({
+            next: (data) => {
+                this.productServices = data;
+            },
+            error: (err) => {
+                console.error('Failed to fetch product/services:', err);
+            }
+        });
+    }
+
+    onProductServiceChange(event: any): void {
+        const selectedProductName = event.target.value;
+        const selectedProduct = this.productServices.find(p => p.name === selectedProductName);
+        if (selectedProduct) {
+            this.invoiceForm.patchValue({ rate: selectedProduct.price });
+        }
     }
 
     loadInvoices(): void {
@@ -204,7 +228,6 @@ export class ClientInvoiceManagementComponent implements OnInit {
             date: formValues.date
         };
 
-        // If editing, skip create flow and call update endpoint
         if (this.editingInvoiceId) {
             this.updateInvoice(this.editingInvoiceId, invoicePayload);
             return;
@@ -233,13 +256,11 @@ export class ClientInvoiceManagementComponent implements OnInit {
         this.loading = true;
         const url = `${this.invoiceApiUrl}/${invoiceId}`;
 
-        // Call update endpoint; backend validation may return 409 like create
         this.http.put<Invoice>(url, invoicePayload).subscribe({
             next: (updated) => {
                 const client = this.clients.find(c => c.id === updated.client.id);
                 updated.clientName = client?.companyName || 'Unknown';
 
-                // replace in local list
                 this.invoices = this.invoices.map(inv => inv.id === updated.id ? updated : inv);
                 this.filterInvoices();
                 this.successMessage = 'Invoice updated successfully!';
@@ -298,8 +319,6 @@ export class ClientInvoiceManagementComponent implements OnInit {
             }
         });
     }
-
-    // voice search removed
 
     downloadInvoice(invoiceId: number): void {
         const invoice = this.invoices.find(inv => inv.id === invoiceId);

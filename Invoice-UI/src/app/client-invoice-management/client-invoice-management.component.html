@@ -115,7 +115,10 @@
           <h3 class="form-section-title">Product/Service Details</h3>
           <div class="form-group">
             <label for="product">Product/Service *</label>
-            <input type="text" id="product" formControlName="product" class="form-input"/>
+            <select id="product" formControlName="product" class="form-input" (change)="onProductServiceChange($event)">
+              <option value="">Select a Product/Service</option>
+              <option *ngFor="let p of productServices" [value]="p.name">{{ p.name }}</option>
+            </select>
             <div *ngIf="isFieldInvalid('product')" class="error-message">
               Product/Service is required.
             </div>
