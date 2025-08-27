@@ -10,4 +10,5 @@ import java.util.List;
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     List<Invoice> findByClientId(Long clientId);
     List<Invoice> findByInvoiceNumberContainingIgnoreCase(String keyword);
+    List<Invoice> findByClientIdAndTotalAndDate(Long clientId, Double total, java.time.LocalDate date);
 }

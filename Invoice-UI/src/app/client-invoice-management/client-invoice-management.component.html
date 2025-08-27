@@ -166,6 +166,19 @@
         </form>
       </div>
     </div>
+
+    <!-- Warning Modal -->
+    <div class="modal" [class.show]="isWarningModalOpen" style="z-index: 1050;">
+        <div class="modal-content">
+            <span class="close" (click)="closeWarningModal()">&times;</span>
+            <h2 style="color: #f44336;">Warning</h2>
+            <p>{{ warningMessage }}</p>
+            <div class="modal-actions" style="text-align: right; margin-top: 20px;">
+                <button class="btn-secondary" (click)="closeWarningModal()" style="margin-right: 10px; padding: 10px 20px; border: none; background-color: #ccc; color: black; border-radius: 5px; cursor: pointer;">Cancel</button>
+                <button class="btn-primary" (click)="proceedWithInvoiceCreation()" style="padding: 10px 20px; border: none; background-color: #007bff; color: white; border-radius: 5px; cursor: pointer;">Ignore & Proceed</button>
+            </div>
+        </div>
+    </div>
   </div>
 
   <div class="invoices-table">
