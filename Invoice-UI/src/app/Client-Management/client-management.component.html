@@ -1,21 +1,12 @@
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-  integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"
-/>
-
 <app-navbar></app-navbar>
 
 <div class="content">
   <div class="topbar">
     <div class="topbar-content">
-      <p style="font-size: 30px">Client Management</p>
+      <p>Client Management</p>
     </div>
   </div>
-  <br />
-  <!-- Messages Container -->
+
   <div class="messages-container">
     <div *ngIf="successMessage" class="message success">
       <i class="fas fa-check-circle"></i> {{ successMessage }}
@@ -25,15 +16,23 @@
     </div>
   </div>
 
-  <div class="button-container">
+  <div class="controls-container">
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by name or company..."
+        [(ngModel)]="searchText"
+        (input)="filterClients()"
+      />
+    </div>
     <button class="create-btn" (click)="openModal()">
       <i class="fas fa-plus"></i> Add New Client
     </button>
   </div>
 
-  <!-- Client List Table -->
   <div class="clients-table-container">
-    <table *ngIf="clients.length > 0" class="table">
+    <table class="table">
       <thead>
         <tr>
           <th>Name</th>
@@ -45,7 +44,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let client of clients">
+        <tr *ngFor="let client of filteredClients">
           <td>{{ client.name }}</td>
           <td>{{ client.companyName }}</td>
           <td>{{ client.email }}</td>
@@ -53,192 +52,114 @@
           <td>{{ client.taxId }}</td>
           <td class="action-buttons">
             <button class="btn-edit" (click)="editClient(client)">
-              <i class="fas fa-edit"></i> Edit
+              <i class="fas fa-edit"></i>
             </button>
             <button class="btn-delete" (click)="deleteClient(client.id)">
-              <i class="fas fa-trash"></i> Delete
+              <i class="fas fa-trash"></i>
             </button>
           </td>
         </tr>
       </tbody>
     </table>
-    <p *ngIf="clients.length === 0" class="no-clients-message">
-      No clients to show.
+    <p *ngIf="filteredClients.length === 0" class="no-clients-message">
+      No clients found.
     </p>
   </div>
+</div>
 
-  <!-- Client Form Modal -->
-  <div class="modal" [class.show]="isModalOpen">
-    <div class="modal-content">
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h2 class="form-title">
-          {{ isEditing ? "Edit Client" : "Create Client" }}
-        </h2>
-        <span class="close" (click)="closeModal()">&times;</span>
-      </div>
-
-      <!-- Scrollable Form Content -->
-      <div class="form-scroll-container">
-        <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
-          <!-- Row 1: Name, Company, Email -->
-          <div class="form-row">
-            <div class="form-group third-width">
-              <label for="name">Full Name *</label>
-              <input
-                type="text"
-                id="name"
-                formControlName="name"
-                class="form-input"
-              />
-              <div *ngIf="isFieldInvalid('name')" class="error-message">
-                Full name is required
-              </div>
-            </div>
-
-            <div class="form-group third-width">
-              <label for="companyName">Company Name *</label>
-              <input
-                type="text"
-                id="companyName"
-                formControlName="companyName"
-                class="form-input"
-              />
-              <div *ngIf="isFieldInvalid('companyName')" class="error-message">
-                Company name is required
-              </div>
-            </div>
-
-            <div class="form-group third-width">
-              <label for="email">Email *</label>
-              <input
-                type="email"
-                id="email"
-                formControlName="email"
-                class="form-input"
-              />
-              <div *ngIf="isFieldInvalid('email')" class="error-message">
-                Valid email is required
-              </div>
+<div class="modal" [class.show]="isModalOpen">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="form-title">{{ isEditing ? "Edit Client" : "Create Client" }}</h2>
+      <button class="close" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="form-scroll-container">
+      <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" formControlName="name" class="form-input"/>
+            <div *ngIf="isFieldInvalid('name')" class="error-message">
+              Full name is required
             </div>
           </div>
-
-          <!-- Row 2: Phone, Country, State -->
-          <div class="form-row">
-            <div class="form-group third-width">
-              <label for="phone">Phone</label>
-              <input
-                type="text"
-                id="phone"
-                formControlName="phone"
-                class="form-input"
-              />
-            </div>
-
-            <div class="form-group third-width">
-              <label for="country">Country *</label>
-              <select id="country" formControlName="country" class="form-input">
-                <option value="">Select Country</option>
-                <option *ngFor="let country of countries" [value]="country">
-                  {{ country }}
-                </option>
-              </select>
-              <div *ngIf="isFieldInvalid('country')" class="error-message">
-                Country is required
-              </div>
-            </div>
-
-            <div class="form-group third-width">
-              <label for="state">State *</label>
-              <input
-                type="text"
-                id="state"
-                formControlName="state"
-                class="form-input"
-              />
-              <div *ngIf="isFieldInvalid('state')" class="error-message">
-                State is required
-              </div>
+          <div class="form-group">
+            <label for="companyName">Company Name *</label>
+            <input type="text" id="companyName" formControlName="companyName" class="form-input"/>
+            <div *ngIf="isFieldInvalid('companyName')" class="error-message">
+              Company name is required
             </div>
           </div>
+        </div>
 
-          <!-- Row 3: City, Zip Code, Tax ID -->
-          <div class="form-row">
-            <div class="form-group third-width">
-              <label for="city">City</label>
-              <input
-                type="text"
-                id="city"
-                formControlName="city"
-                class="form-input"
-              />
-            </div>
-
-            <div class="form-group third-width">
-              <label for="zipCode">ZIP/Postal Code</label>
-              <input
-                type="text"
-                id="zipCode"
-                formControlName="zipCode"
-                class="form-input"
-              />
-            </div>
-
-            <div class="form-group third-width">
-              <label for="taxId">GSTIN/Tax ID</label>
-              <input
-                type="text"
-                id="taxId"
-                formControlName="taxId"
-                class="form-input"
-              />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" formControlName="email" class="form-input"/>
+            <div *ngIf="isFieldInvalid('email')" class="error-message">
+              Valid email is required
             </div>
           </div>
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="text" id="phone" formControlName="phone" class="form-input"/>
+          </div>
+        </div>
 
-          <!-- Full Width Fields -->
-          <div class="form-row">
-            <div class="form-group full-width">
-              <label for="billingAddress">Billing Address *</label>
-              <textarea
-                id="billingAddress"
-                formControlName="billingAddress"
-                class="form-input"
-                rows="3"
-              ></textarea>
-              <div
-                *ngIf="isFieldInvalid('billingAddress')"
-                class="error-message"
-              >
-                Billing address is required
-              </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="country">Country *</label>
+            <select id="country" formControlName="country" class="form-input">
+              <option value="">Select Country</option>
+              <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+            </select>
+            <div *ngIf="isFieldInvalid('country')" class="error-message">
+              Country is required
             </div>
           </div>
-
-          <div class="form-row">
-            <div class="form-group full-width">
-              <label for="shippingAddress">Shipping Address</label>
-              <textarea
-                id="shippingAddress"
-                formControlName="shippingAddress"
-                class="form-input"
-                rows="3"
-              ></textarea>
+          <div class="form-group">
+            <label for="state">State *</label>
+            <input type="text" id="state" formControlName="state" class="form-input"/>
+            <div *ngIf="isFieldInvalid('state')" class="error-message">
+              State is required
             </div>
           </div>
-        </form>
-      </div>
+        </div>
 
-      <!-- Fixed Form Actions -->
-      <div class="form-actions">
-        <button
-          type="submit"
-          [disabled]="!clientForm.valid"
-          class="submit-btn"
-          (click)="onSubmit()"
-        >
-          {{ isEditing ? "Update Client" : "Create Client" }}
-        </button>
-      </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" formControlName="city" class="form-input"/>
+          </div>
+          <div class="form-group">
+            <label for="zipCode">ZIP/Postal Code</label>
+            <input type="text" id="zipCode" formControlName="zipCode" class="form-input"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="taxId">GSTIN/Tax ID</label>
+          <input type="text" id="taxId" formControlName="taxId" class="form-input"/>
+        </div>
+
+        <div class="form-group">
+          <label for="billingAddress">Billing Address *</label>
+          <textarea id="billingAddress" formControlName="billingAddress" class="form-input" rows="3"></textarea>
+          <div *ngIf="isFieldInvalid('billingAddress')" class="error-message">
+            Billing address is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="shippingAddress">Shipping Address</label>
+          <textarea id="shippingAddress" formControlName="shippingAddress" class="form-input" rows="3"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="form-actions">
+      <button type="submit" [disabled]="!clientForm.valid" class="submit-btn" (click)="onSubmit()">
+        {{ isEditing ? "Update Client" : "Create Client" }}
+      </button>
     </div>
   </div>
 </div>
