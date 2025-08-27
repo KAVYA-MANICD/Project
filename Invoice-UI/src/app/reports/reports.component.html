@@ -1,0 +1,27 @@
+<app-navbar></app-navbar>
+<div class="reports-container">
+  <h1>Reports</h1>
+  <div class="cards-container">
+    <div class="card" (click)="generateClientReport()">
+      <div class="card-content">
+        <i class="fas fa-users card-icon"></i>
+        <h2>Client Report</h2>
+        <p>Generate a PDF report of all clients.</p>
+      </div>
+    </div>
+    <div class="card" (click)="generateInvoiceReport()">
+      <div class="card-content">
+        <i class="fas fa-file-invoice card-icon"></i>
+        <h2>Invoice Report</h2>
+        <p>Generate a PDF report of all invoices.</p>
+      </div>
+    </div>
+    <div class="card" (click)="generateSummaryReport()">
+      <div class="card-content">
+        <i class="fas fa-chart-pie card-icon"></i>
+        <h2>Summary Report</h2>
+        <p>Generate a PDF report of smart analytics.</p>
+      </div>
+    </div>
+  </div>
+</div>
