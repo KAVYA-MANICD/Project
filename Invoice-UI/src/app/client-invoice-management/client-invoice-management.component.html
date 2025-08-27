@@ -19,23 +19,22 @@
     <button class="create-btn" (click)="openInvoiceModal()">
       <i class="fas fa-plus"></i> Create Invoice
     </button>
-  </div>
 
-  <!-- Search Bar -->
-  <div class="search-container">
-    <input
-      type="text"
-      class="search-input"
-      placeholder="Search invoices by Client or Product/Service..."
-      [(ngModel)]="searchText"
-      (input)="filterInvoices()"
-    />
-    <button class="mic-btn" (click)="startVoiceRecognition()" title="Click to use voice search">
-      <i class="fas fa-microphone"></i>
-    </button>
-  </div>
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search invoices by Client or Product/Service..."
+        [(ngModel)]="searchText"
+        (input)="filterInvoices()"
+      />
+      <button class="mic-btn" (click)="startVoiceRecognition()" title="Click to use voice search">
+        <i class="fas fa-microphone"></i>
+      </button>
+    </div>
 
-  <div class="modal" [class.show]="isInvoiceModalOpen">
+    <div class="modal" [class.show]="isInvoiceModalOpen">
       <div class="modal-content">
         <span class="close" (click)="closeInvoiceModal()">&times;</span>
         <h2 class="form-title">Invoice Details</h2>
