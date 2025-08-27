@@ -16,25 +16,25 @@
       ></app-metric-card>
       <app-metric-card
         title="Total Revenue"
-        [value]="metrics.totalRevenue | currency:'USD'"
+        [value]="(metrics.totalRevenue | currency:'USD') || ''"
         icon="dollar-sign"
         color="green"
       ></app-metric-card>
       <app-metric-card
         title="Average Invoice Value"
-        [value]="metrics.averageInvoiceValue | currency:'USD'"
+        [value]="(metrics.averageInvoiceValue | currency:'USD') || ''"
         icon="bar-chart"
         color="orange"
       ></app-metric-card>
       <app-metric-card
         title="Highest Invoice Value"
-        [value]="metrics.highestInvoiceValue | currency:'USD'"
+        [value]="(metrics.highestInvoiceValue | currency:'USD') || ''"
         icon="arrow-up"
         color="red"
       ></app-metric-card>
       <app-metric-card
         title="Lowest Invoice Value"
-        [value]="metrics.lowestInvoiceValue | currency:'USD'"
+        [value]="(metrics.lowestInvoiceValue | currency:'USD') || ''"
         icon="arrow-down"
         color="purple"
       ></app-metric-card>
