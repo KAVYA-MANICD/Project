@@ -1,26 +1,29 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-client-management',
-  imports: [ReactiveFormsModule, CommonModule, RouterModule, NavbarComponent],
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule, RouterModule, NavbarComponent, FormsModule],
   templateUrl: './client-management.component.html',
   styleUrls: ['./client-management.component.css']
 })
 export class ClientManagementComponent implements OnInit {
   clientForm!: FormGroup;
   clients: any[] = [];
+  filteredClients: any[] = [];
   loading = false;
   errorMessage = '';
   successMessage = '';
   isModalOpen = false;
-  isEditing = false; 
-  currentClientId: number | null = null; 
+  isEditing = false;
+  currentClientId: number | null = null;
   countries: string[] = ['India', 'USA', 'UK', 'Canada', 'Australia'];
+  searchText = '';
 
   constructor(
     private fb: FormBuilder,
@@ -53,11 +56,20 @@ export class ClientManagementComponent implements OnInit {
     this.http.get<any[]>('http://localhost:8080/clients/all').subscribe({
       next: (response) => {
         this.clients = response;
+        this.filteredClients = response;
       },
       error: (err) => {
         console.error('Error loading clients:', err);
         this.errorMessage = 'Failed to load clients';
       }
+    });
+  }
+
+  filterClients() {
+    const searchText = this.searchText.toLowerCase();
+    this.filteredClients = this.clients.filter(client => {
+      return client.name.toLowerCase().includes(searchText) ||
+             client.companyName.toLowerCase().includes(searchText);
     });
   }
 

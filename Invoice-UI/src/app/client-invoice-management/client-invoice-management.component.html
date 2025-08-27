@@ -1,200 +1,41 @@
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-  integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"
-/>
-
 <app-navbar></app-navbar>
 
 <div class="content">
   <div class="topbar">
     <div class="topbar-content">
-      <p style="font-size: 30px">Client Invoice Management</p>
+      <p>Client Invoice Management</p>
     </div>
   </div>
-  <br />
-  <!-- Search Bar -->
-  <div class="search-container">
-    <input
-      type="text"
-      class="search-input"
-      placeholder="Search invoices by Client or Product/Service..."
-      [(ngModel)]="searchText"
-      (input)="filterInvoices()"
-    />
-    <button class="mic-btn" (click)="startVoiceRecognition()" title="Click to use voice search">
-      <i class="fas fa-microphone"></i>
-    </button>
+
+  <div class="messages-container">
+    <div *ngIf="successMessage" class="message success">
+      <i class="fas fa-check-circle"></i> {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="message error">
+      <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
+    </div>
   </div>
-  <div class="button-container">
+
+  <div class="controls-container">
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by client or product..."
+        [(ngModel)]="searchText"
+        (input)="filterInvoices()"
+      />
+      <button class="mic-btn" (click)="startVoiceRecognition()" title="Voice Search">
+        <i class="fas fa-microphone"></i>
+      </button>
+    </div>
     <button class="create-btn" (click)="openInvoiceModal()">
       <i class="fas fa-plus"></i> Create Invoice
     </button>
-
-    <div class="modal" [class.show]="isInvoiceModalOpen">
-      <div class="modal-content">
-        <span class="close" (click)="closeInvoiceModal()">&times;</span>
-        <h2 class="form-title">Invoice Details</h2>
-        <br />
-        <div *ngIf="successMessage" class="message success">
-          <i class="fas fa-check-circle"></i> {{ successMessage }}
-        </div>
-
-        <div *ngIf="errorMessage" class="message error">
-          <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
-        </div>
-
-        <div *ngIf="loading" class="message loading">
-          <i class="fas fa-spinner fa-spin"></i> Processing...
-        </div>
-
-        <form
-          [formGroup]="invoiceForm"
-          (ngSubmit)="onInvoiceSubmit()"
-          class="invoice-form"
-        >
-          <div class="form-row">
-            <div class="form-group">
-              <label for="client">Select Client</label>
-              <select id="client" formControlName="client" class="form-input">
-                <option value="">Select Client</option>
-                <option *ngFor="let client of clients" [value]="client.id">
-                  {{ client.companyName }}
-                </option>
-              </select>
-              <div *ngIf="isFieldInvalid('client')" class="error-message">
-                Client selection is required
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="product">Product/Service Name</label>
-              <input
-                type="text"
-                id="product"
-                formControlName="product"
-                class="form-input"
-              />
-              <div *ngIf="isFieldInvalid('product')" class="error-message">
-                Product/Service name is required
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="date">Invoice Date</label>
-              <input
-                type="date"
-                id="date"
-                formControlName="date"
-                class="form-input"
-              />
-              <div *ngIf="isFieldInvalid('date')" class="error-message">
-                Invoice date is required
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="quantity">Quantity</label>
-              <input
-                type="number"
-                id="quantity"
-                formControlName="quantity"
-                class="form-input"
-              />
-              <div *ngIf="isFieldInvalid('quantity')" class="error-message">
-                Quantity is required
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="rate">Rate</label>
-              <input
-                type="number"
-                id="rate"
-                formControlName="rate"
-                class="form-input"
-              />
-              <div *ngIf="isFieldInvalid('rate')" class="error-message">
-                Rate is required
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group" style="width: 100%">
-              <label for="description">Description</label>
-              <textarea
-                id="description"
-                formControlName="description"
-                class="form-input"
-                rows="3"
-                placeholder="Enter a short description..."
-              ></textarea>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Subtotal</label>
-              <input
-                type="text"
-                [value]="calculateSubtotal() | number : '1.2-2'"
-                class="form-input"
-                readonly
-              />
-            </div>
-
-            <div class="form-group">
-              <label>Taxes (18% GST)</label>
-              <input
-                type="text"
-                [value]="calculateTaxes() | number : '1.2-2'"
-                class="form-input"
-                readonly
-              />
-            </div>
-
-            <div class="form-group">
-              <label>Total</label>
-              <input
-                type="text"
-                [value]="calculateTotal() | number : '1.2-2'"
-                class="form-input"
-                readonly
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            [disabled]="!invoiceForm.valid || loading"
-            class="submit-btn"
-          >
-            {{ loading ? "Processing..." : "Create Invoice" }}
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Warning Modal -->
-    <div class="modal" [class.show]="isWarningModalOpen" style="z-index: 1050;">
-        <div class="modal-content">
-            <span class="close" (click)="closeWarningModal()">&times;</span>
-            <h2 style="color: #f44336;">Warning</h2>
-            <p>{{ warningMessage }}</p>
-            <div class="modal-actions" style="text-align: right; margin-top: 20px;">
-                <button class="btn-secondary" (click)="closeWarningModal()" style="margin-right: 10px; padding: 10px 20px; border: none; background-color: #ccc; color: black; border-radius: 5px; cursor: pointer;">Cancel</button>
-                <button class="btn-primary" (click)="proceedWithInvoiceCreation()" style="padding: 10px 20px; border: none; background-color: #007bff; color: white; border-radius: 5px; cursor: pointer;">Ignore & Proceed</button>
-            </div>
-        </div>
-    </div>
   </div>
 
-  <div class="invoices-table">
-    <table *ngIf="filteredInvoices.length > 0" class="table">
+  <div class="invoices-table-container">
+    <table class="table">
       <thead>
         <tr>
           <th>Client</th>
@@ -213,34 +54,135 @@
           <td>{{ invoice.total | currency }}</td>
           <td>{{ invoice.date | date : "shortDate" }}</td>
           <td class="action-buttons">
-            <button
-              class="btn-delete"
-              (click)="deleteInvoice(invoice.id!)"
-              *ngIf="invoice.id"
-            >
-              <i class="fas fa-trash"></i> Delete
+            <button class="btn-delete" (click)="deleteInvoice(invoice.id!)" *ngIf="invoice.id">
+              <i class="fas fa-trash"></i>
             </button>
-            <button
-              class="btn-generate"
-              (click)="generateInvoice(invoice.id!)"
-              *ngIf="invoice.id"
-            >
-              <i class="fas fa-file-invoice"></i> Generate Invoice
+            <button class="btn-generate" (click)="generateInvoice(invoice.id!)" *ngIf="invoice.id">
+              <i class="fas fa-file-invoice"></i>
             </button>
-            <button
-              class="btn-download"
-              (click)="downloadInvoice(invoice.id!)"
-              *ngIf="invoice.id"
-            >
-              <i class="fas fa-download"></i> Download PDF
+            <button class="btn-download" (click)="downloadInvoice(invoice.id!)" *ngIf="invoice.id">
+              <i class="fas fa-download"></i>
             </button>
           </td>
         </tr>
       </tbody>
     </table>
-    <p *ngIf="filteredInvoices.length === 0 && invoices.length > 0">
-      No invoices found for your search.
+    <p *ngIf="filteredInvoices.length === 0" class="no-invoices-message">
+      No invoices found.
     </p>
-    <p *ngIf="invoices.length === 0">No invoices to show.</p>
+  </div>
+</div>
+
+<div class="modal" [class.show]="isInvoiceModalOpen">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="form-title">Create Invoice</h2>
+      <button class="close" (click)="closeInvoiceModal()">&times;</button>
+    </div>
+    <div class="form-scroll-container">
+      <div *ngIf="loading" class="message loading">
+        <i class="fas fa-spinner fa-spin"></i> Processing...
+      </div>
+      <form [formGroup]="invoiceForm" (ngSubmit)="onInvoiceSubmit()" class="invoice-form">
+        <div class="form-section">
+          <h3 class="form-section-title">Client and Date</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="client">Client *</label>
+              <select id="client" formControlName="client" class="form-input">
+                <option value="">Select a Client</option>
+                <option *ngFor="let client of clients" [value]="client.id">
+                  {{ client.companyName }}
+                </option>
+              </select>
+              <div *ngIf="isFieldInvalid('client')" class="error-message">
+                Client is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="date">Invoice Date *</label>
+              <input type="date" id="date" formControlName="date" class="form-input"/>
+              <div *ngIf="isFieldInvalid('date')" class="error-message">
+                Date is required.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Product/Service Details</h3>
+          <div class="form-group">
+            <label for="product">Product/Service *</label>
+            <input type="text" id="product" formControlName="product" class="form-input"/>
+            <div *ngIf="isFieldInvalid('product')" class="error-message">
+              Product/Service is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description" class="form-input" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Billing</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="quantity">Quantity *</label>
+              <input type="number" id="quantity" formControlName="quantity" class="form-input"/>
+              <div *ngIf="isFieldInvalid('quantity')" class="error-message">
+                Quantity is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="rate">Rate *</label>
+              <input type="number" id="rate" formControlName="rate" class="form-input"/>
+              <div *ngIf="isFieldInvalid('rate')" class="error-message">
+                Rate is required.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Summary</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Subtotal</label>
+              <input type="text" [value]="calculateSubtotal() | number : '1.2-2'" class="form-input" readonly/>
+            </div>
+            <div class="form-group">
+              <label>Taxes (18% GST)</label>
+              <input type="text" [value]="calculateTaxes() | number : '1.2-2'" class="form-input" readonly/>
+            </div>
+            <div class="form-group">
+              <label>Total</label>
+              <input type="text" [value]="calculateTotal() | number : '1.2-2'" class="form-input" readonly/>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="form-actions">
+      <button type="submit" [disabled]="!invoiceForm.valid || loading" class="submit-btn" (click)="onInvoiceSubmit()">
+        {{ loading ? "Processing..." : "Create Invoice" }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" [class.show]="isWarningModalOpen" style="z-index: 1050;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="form-title" style="color: #c72a42;">Warning</h2>
+      <button class="close" (click)="closeWarningModal()">&times;</button>
+    </div>
+    <div class="form-scroll-container">
+      <p>{{ warningMessage }}</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeWarningModal()">Cancel</button>
+      <button class="btn-primary" (click)="proceedWithInvoiceCreation()">Ignore & Proceed</button>
+    </div>
   </div>
 </div>
