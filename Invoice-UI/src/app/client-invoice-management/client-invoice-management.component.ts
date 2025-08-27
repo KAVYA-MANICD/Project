@@ -36,7 +36,9 @@ interface Invoice {
 export class ClientInvoiceManagementComponent implements OnInit {
     invoiceForm: FormGroup;
     invoices: Invoice[] = [];
+    filteredInvoices: Invoice[] = [];
     clients: Client[] = [];
+    searchText: string = '';
     isInvoiceModalOpen = false;
     loading = false;
     successMessage: string | null = null;
@@ -91,10 +93,20 @@ export class ClientInvoiceManagementComponent implements OnInit {
                         clientName: client?.companyName || 'Unknown'
                     };
                 });
+                this.filteredInvoices = this.invoices;
             },
             error: (err) => {
                 console.error('Failed to fetch invoices:', err);
             }
+        });
+    }
+
+    filterInvoices(): void {
+        const searchText = this.searchText.toLowerCase();
+        this.filteredInvoices = this.invoices.filter(invoice => {
+            const clientName = invoice.clientName?.toLowerCase() || '';
+            const productName = invoice.productOrService?.toLowerCase() || '';
+            return clientName.includes(searchText) || productName.includes(searchText);
         });
     }
 
@@ -159,6 +171,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
                 const client = this.clients.find(c => c.id === newInvoice.client.id);
                 newInvoice.clientName = client?.companyName || 'Unknown';
                 this.invoices.push(newInvoice);
+                this.filterInvoices();
                 this.successMessage = 'Invoice created successfully!';
                 this.closeInvoiceModal();
                 this.loading = false;
@@ -175,11 +188,34 @@ export class ClientInvoiceManagementComponent implements OnInit {
         this.http.delete(`${this.invoiceApiUrl}/${invoiceId}`).subscribe({
             next: () => {
                 this.invoices = this.invoices.filter(i => i.id !== invoiceId);
+                this.filterInvoices();
             },
             error: (err) => {
                 console.error('Error deleting invoice:', err);
             }
         });
+    }
+
+    startVoiceRecognition(): void {
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new (window as any).webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.start();
+
+            recognition.onresult = (event: any) => {
+                this.searchText = event.results[0][0].transcript;
+                this.filterInvoices();
+            };
+
+            recognition.onerror = (event: any) => {
+                console.error('Speech recognition error:', event.error);
+            };
+        } else {
+            alert('Your browser does not support voice recognition.');
+        }
     }
 
     // ✅ Updated downloadInvoice: opens print dialog for "Save as PDF"
