@@ -56,33 +56,7 @@ export class SmartAnalyticsComponent implements OnInit {
     this.loading = true;
     this.analyticsService.getOverview().subscribe({
       next: (data: any) => {
-        // TODO: Replace with real data from the backend
-        // Mock data for new metrics and charts
-        this.metrics = {
-          ...data,
-          highestInvoiceValue: 5000,
-          lowestInvoiceValue: 100,
-          revenuePerMonth: [
-            { month: 'Jan', revenue: 5000 },
-            { month: 'Feb', revenue: 7000 },
-            { month: 'Mar', revenue: 6000 },
-          ],
-          avgInvoiceValuePerMonth: [
-            { month: 'Jan', value: 500 },
-            { month: 'Feb', value: 550 },
-            { month: 'Mar', value: 520 },
-          ],
-          invoicesByClient: [
-            { client: 'Client A', count: 10 },
-            { client: 'Client B', count: 15 },
-            { client: 'Client C', count: 5 },
-          ],
-          invoicesByProduct: [
-            { product: 'Service X', count: 20 },
-            { product: 'Service Y', count: 8 },
-            { product: 'Service Z', count: 2 },
-          ]
-        };
+        this.metrics = data;
 
         this.loading = false;
         // Render all charts after a short delay
