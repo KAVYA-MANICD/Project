@@ -82,4 +82,20 @@ export class ReportsComponent {
   private formatKey(key: string): string {
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
   }
+
+  generateProductServiceReport() {
+    this.http.get<any[]>('http://localhost:8080/product-services').subscribe({
+      next: (productServices) => {
+        const doc = new jsPDF();
+        (doc as any).autoTable({
+          head: [['ID', 'Name', 'Price']],
+          body: productServices.map(ps => [ps.id, ps.name, ps.price]),
+        });
+        doc.save('product-service-report.pdf');
+      },
+      error: (err) => {
+        console.error('Error generating product/service report:', err);
+      }
+    });
+  }
 }
