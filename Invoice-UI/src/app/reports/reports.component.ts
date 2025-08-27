@@ -55,8 +55,20 @@ export class ReportsComponent {
         let y = 30;
         for (const key in summary) {
           if (summary.hasOwnProperty(key)) {
-            doc.text(`${this.formatKey(key)}: ${summary[key]}`, 14, y);
-            y += 10;
+            const value = summary[key];
+            let valueString;
+            if (Array.isArray(value)) {
+                valueString = value.map(item => {
+                    return `{ ${Object.entries(item).map(([k,v]) => `${k}: ${v}`).join(', ')} }`
+                }).join(', ');
+            } else {
+                valueString = value;
+            }
+
+            const text = `${this.formatKey(key)}: ${valueString}`;
+            const splitText = doc.splitTextToSize(text, 180); // 180 is width of page minus margins
+            doc.text(splitText, 14, y);
+            y += (splitText.length * 10);
           }
         }
         doc.save('summary-report.pdf');
