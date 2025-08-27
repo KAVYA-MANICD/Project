@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, type ChartConfiguration, registerables } from 'chart.js';
 import { SmartAnalyticsService } from './smart-analytics.service';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-smart-analytics',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NavbarComponent],
   templateUrl: './smart-analytics.component.html',
   styleUrls: ['./smart-analytics.component.css']
 })
