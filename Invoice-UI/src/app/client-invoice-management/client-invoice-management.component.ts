@@ -67,7 +67,8 @@ export class ClientInvoiceManagementComponent implements OnInit {
             product: ['', Validators.required],
             quantity: [1, [Validators.required, Validators.min(1)]],
             rate: [0, [Validators.required, Validators.min(0)]],
-            description: ['']
+            description: [''],
+            date: [new Date().toISOString().split('T')[0], Validators.required]
         });
     }
 
@@ -120,7 +121,8 @@ export class ClientInvoiceManagementComponent implements OnInit {
             product: '',
             quantity: 1,
             rate: 0,
-            description: ''
+            description: '',
+            date: new Date().toISOString().split('T')[0]
         });
         this.successMessage = null;
         this.errorMessage = null;
@@ -180,7 +182,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
             taxes,
             total,
             description: formValues.description,
-            date: new Date().toISOString().split('T')[0]
+            date: formValues.date
         };
 
         this.http.post<any>(`${this.invoiceApiUrl}/validate`, invoicePayload).subscribe({

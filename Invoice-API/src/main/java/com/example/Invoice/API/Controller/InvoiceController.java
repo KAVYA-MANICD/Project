@@ -6,6 +6,7 @@ import com.example.Invoice.API.Repository.ClientRepository;
 import com.example.Invoice.API.Repository.InvoiceRepository;
 import com.example.Invoice.API.Service.InvoiceValidationService;
 import com.example.Invoice.API.Service.ValidationResult;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> createInvoice(@RequestBody Invoice invoice, @RequestParam(defaultValue = "false") boolean force) {
+    public ResponseEntity<?> createInvoice(@Valid @RequestBody Invoice invoice, @RequestParam(defaultValue = "false") boolean force) {
         if (!force) {
             ValidationResult validationResult = invoiceValidationService.validateInvoice(invoice);
             if (validationResult != ValidationResult.VALID) {
