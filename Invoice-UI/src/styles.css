@@ -8,4 +8,23 @@ html, body {
 }
 
 /* Basic container from app component */
-.container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+/* .container { max-width: 1200px; margin: 10px; padding-left: 400px; } */
+.container { max-width: 1200px; margin-left: 500px; margin-top: 50px; }
+/* .container { max-width: 1200px; margin: auto; padding: 0; } */
+
+/* Side menu item sizing overrides (apply app-wide) */
+.sidemenu ul li a {
+	font-size: 1.6rem; /* bigger label size */
+	padding: 1.25rem 2rem; /* more comfortable clickable area */
+}
+
+.sidemenu ul li a i {
+	margin-right: 1.6rem;
+	font-size: 1.6rem; /* larger icon to match text */
+	width: 34px;
+}
+
+.logo-container img {
+	height: 56px; /* larger logo to visually match menu */
+}
+

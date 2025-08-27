@@ -5,16 +5,17 @@
 }
 
 .content {
-  margin-left: 280px;
-  padding: 2rem;
-  transition: margin-left 0.3s ease;
+  margin-left: 10px;
+  /* reduce top gap so content aligns closer with the fixed sidebar */
+  padding: 1rem 2rem;
 }
 
 .topbar {
   background-color: #ffffff;
   border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  /* slightly smaller header padding to reduce vertical spacing */
+  padding: 1rem;
+  margin-bottom: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -75,11 +76,14 @@
   max-width: 500px;
   min-width: 200px;
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .search-input {
   width: 100%;
-  padding: 0.75rem 3.5rem 0.75rem 1rem; /* Increased right padding */
+  /* normal input padding; mic button will sit outside the input as a sibling */
+  padding: 0.75rem 1rem;
   border: 1px solid #dcdfe6;
   border-radius: 8px;
   font-size: 1rem;
@@ -92,23 +96,6 @@
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
 }
 
-.mic-btn {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: #627d98;
-  padding: 0.5rem;
-  z-index: 10;
-}
-
-.mic-btn:hover {
-  color: #102a43;
-}
 
 .create-btn {
   background-color: #007bff;
@@ -177,20 +164,30 @@
   align-items: center;
 }
 
-.btn-delete,
-.btn-generate,
-.btn-download {
-  padding: 0.6rem 1.1rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  display: flex;
+/* Make action buttons square, center their content and use currentColor for icons */
+.action-buttons button {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+  box-shadow: none;
 }
 
+/* SVGs inherit color from the button */
+.action-buttons button svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  display: block;
+}
+
+/* Specific color schemes */
 .btn-delete {
   background-color: #fdecea;
   color: #c72a42;
@@ -198,6 +195,7 @@
 
 .btn-delete:hover {
   background-color: #f7c5cb;
+  transform: translateY(-1px);
 }
 
 .btn-generate,
@@ -209,6 +207,14 @@
 .btn-generate:hover,
 .btn-download:hover {
   background-color: #b3d1ff;
+  transform: translateY(-1px);
+}
+
+/* keep previously defined hover visual for generate/download */
+.btn-generate:active,
+.btn-download:active,
+.btn-delete:active {
+  transform: translateY(0);
 }
 
 .modal {
@@ -461,3 +467,6 @@ textarea.form-input {
     padding: 1rem;
   }
 }
+
+/* Voice modal styles (shared with client-management) */
+/* voice-search UI removed */

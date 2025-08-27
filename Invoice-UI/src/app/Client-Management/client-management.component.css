@@ -5,16 +5,17 @@
 }
 
 .content {
-  margin-left: 280px;
-  padding: 2rem;
-  transition: margin-left 0.3s ease;
+  margin-left: 10px;
+  /* reduce top gap so content aligns closer with the fixed sidebar */
+  padding: 1rem 2rem;
 }
 
 .topbar {
   background-color: #ffffff;
   border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  /* slightly smaller header padding to reduce vertical spacing */
+  padding: 1rem;
+  margin-bottom: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -68,16 +69,22 @@
   flex-grow: 1;
   max-width: 500px;
   min-width: 200px;
+  display: flex;
+  align-items: center;
 }
 
-.search-input {
+ .search-input {
   width: 100%;
-  padding: 0.75rem 1rem;
+  /* add right padding so icons or buttons don't overlap the text */
+  padding: 0.75rem 3.5rem 0.75rem 1rem;
   border: 1px solid #dcdfe6;
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
+ }
+
+/* Microphone button styling (match client-invoice-management) */
+
 
 .search-input:focus {
   outline: none;
@@ -156,19 +163,30 @@
   align-items: center;
 }
 
-.btn-edit,
-.btn-delete {
-  padding: 0.6rem 1.1rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  display: flex;
+/* Make action buttons square, center their content and use currentColor for icons */
+.action-buttons button {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+  box-shadow: none;
 }
 
+/* SVGs inherit color from the button */
+.action-buttons button svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  display: block;
+}
+
+/* Specific color schemes */
 .btn-edit {
   background-color: #e6f7f1;
   color: #0b8050;
@@ -176,6 +194,7 @@
 
 .btn-edit:hover {
   background-color: #b3e6d3;
+  transform: translateY(-1px);
 }
 
 .btn-delete {
@@ -185,6 +204,12 @@
 
 .btn-delete:hover {
   background-color: #f7c5cb;
+  transform: translateY(-1px);
+}
+
+.btn-edit:active,
+.btn-delete:active {
+  transform: translateY(0);
 }
 
 .modal {
@@ -376,3 +401,6 @@ textarea.form-input {
     padding: 1rem;
   }
 }
+
+/* Voice modal styles */
+/* voice-search UI removed */

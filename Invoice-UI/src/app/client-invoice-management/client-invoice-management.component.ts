@@ -48,6 +48,8 @@ export class ClientInvoiceManagementComponent implements OnInit {
     warningMessage = '';
     private invoicePayloadForProceed: Invoice | null = null;
 
+    
+
     private invoiceApiUrl = 'http://localhost:8080/invoices';
     private clientsApiUrl = 'http://localhost:8080/clients/all';
 
@@ -230,6 +232,13 @@ export class ClientInvoiceManagementComponent implements OnInit {
     }
 
     deleteInvoice(invoiceId: number): void {
+        const invoice = this.invoices.find(i => i.id === invoiceId);
+        const label = invoice?.invoiceNumber ? `Invoice #${invoice.invoiceNumber}` : 'this invoice';
+        const confirmed = window.confirm(`Are you sure you want to delete ${label}? This action cannot be undone.`);
+        if (!confirmed) {
+            return;
+        }
+
         this.http.delete(`${this.invoiceApiUrl}/${invoiceId}`).subscribe({
             next: () => {
                 this.invoices = this.invoices.filter(i => i.id !== invoiceId);
@@ -241,27 +250,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
         });
     }
 
-    startVoiceRecognition(): void {
-        if ('webkitSpeechRecognition' in window) {
-            const recognition = new (window as any).webkitSpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
-            recognition.maxAlternatives = 1;
-
-            recognition.start();
-
-            recognition.onresult = (event: any) => {
-                this.searchText = event.results[0][0].transcript;
-                this.filterInvoices();
-            };
-
-            recognition.onerror = (event: any) => {
-                console.error('Speech recognition error:', event.error);
-            };
-        } else {
-            alert('Your browser does not support voice recognition.');
-        }
-    }
+    // voice search removed
 
     downloadInvoice(invoiceId: number): void {
         const invoice = this.invoices.find(inv => inv.id === invoiceId);

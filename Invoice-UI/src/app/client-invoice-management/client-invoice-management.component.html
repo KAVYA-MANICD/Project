@@ -25,9 +25,7 @@
         [(ngModel)]="searchText"
         (input)="filterInvoices()"
       />
-      <button class="mic-btn" (click)="startVoiceRecognition()" title="Voice Search">
-        <i class="fas fa-microphone"></i>
-      </button>
+      
     </div>
     <button class="create-btn" (click)="openInvoiceModal()">
       <i class="fas fa-plus"></i> Create Invoice
@@ -54,14 +52,14 @@
           <td>{{ invoice.total | currency }}</td>
           <td>{{ invoice.date | date : "shortDate" }}</td>
           <td class="action-buttons">
-            <button class="btn-delete" (click)="deleteInvoice(invoice.id!)" *ngIf="invoice.id" title="Delete Invoice">
-              <i class="fas fa-trash"></i>
+            <button type="button" class="btn-delete" (click)="deleteInvoice(invoice.id!)" *ngIf="invoice.id" title="Delete Invoice" aria-label="Delete Invoice">
+              <i class="fas fa-trash-alt" aria-hidden="true"></i>
             </button>
-            <button class="btn-generate" (click)="generateInvoice(invoice.id!)" *ngIf="invoice.id" title="Generate Invoice">
-              <i class="fas fa-file-invoice"></i>
+            <button type="button" class="btn-generate" (click)="generateInvoice(invoice.id!)" *ngIf="invoice.id" title="Generate Invoice" aria-label="Generate Invoice">
+              <i class="fas fa-file-invoice" aria-hidden="true"></i>
             </button>
-            <button class="btn-download" (click)="downloadInvoice(invoice.id!)" *ngIf="invoice.id" title="Download PDF">
-              <i class="fas fa-download"></i>
+            <button type="button" class="btn-download" (click)="downloadInvoice(invoice.id!)" *ngIf="invoice.id" title="Download PDF" aria-label="Download PDF">
+              <i class="fas fa-download" aria-hidden="true"></i>
             </button>
           </td>
         </tr>
@@ -72,6 +70,7 @@
     </p>
   </div>
 </div>
+
 
 <div class="modal" [class.show]="isInvoiceModalOpen">
   <div class="modal-content">

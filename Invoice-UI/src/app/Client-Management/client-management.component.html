@@ -25,6 +25,7 @@
         [(ngModel)]="searchText"
         (input)="filterClients()"
       />
+      
     </div>
     <button class="create-btn" (click)="openModal()">
       <i class="fas fa-plus"></i> Add New Client
@@ -51,11 +52,11 @@
           <td>{{ client.billingAddress }}</td>
           <td>{{ client.taxId }}</td>
           <td class="action-buttons">
-            <button class="btn-edit" (click)="editClient(client)" title="Edit Client">
-              <i class="fas fa-edit"></i>
+            <button type="button" class="btn-edit" (click)="editClient(client)" title="Edit Client" aria-label="Edit Client">
+              <i class="fas fa-edit" aria-hidden="true"></i>
             </button>
-            <button class="btn-delete" (click)="deleteClient(client.id)" title="Delete Client">
-              <i class="fas fa-trash"></i>
+            <button type="button" class="btn-delete" (click)="deleteClient(client.id)" title="Delete Client" aria-label="Delete Client">
+              <i class="fas fa-trash-alt" aria-hidden="true"></i>
             </button>
           </td>
         </tr>
@@ -66,6 +67,8 @@
     </p>
   </div>
 </div>
+
+
 
 <div class="modal" [class.show]="isModalOpen">
   <div class="modal-content">

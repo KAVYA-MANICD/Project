@@ -7,7 +7,7 @@
 }
 
 .sidemenu {
-  width: 280px;
+  width: 450px;
   height: 100vh;
   background-color: #102a43;
   display: flex;
@@ -101,7 +101,7 @@
 
 @media (max-width: 1024px) {
   .sidemenu {
-    transform: translateX(-280px);
+    transform: translateX(-340px);
     position: fixed;
   }
 
