@@ -51,14 +51,14 @@ public class AnalyticsController {
 
         // Invoices by Client
         Map<String, Long> invoicesByClientMap = invoices.stream()
-                .filter(i -> i.getClientName() != null && !i.getClientName().isEmpty())
-                .collect(Collectors.groupingBy(Invoice::getClientName, Collectors.counting()));
+                .filter(i -> i.getClient() != null && i.getClient().getName() != null && !i.getClient().getName().isEmpty())
+                .collect(Collectors.groupingBy(i -> i.getClient().getName(), Collectors.counting()));
         List<Map<String, Object>> invoicesByClient = mapToList(invoicesByClientMap, "client", "count");
 
-        // Invoices by Product/Service (assuming product is in invoice description)
+        // Invoices by Product/Service
         Map<String, Long> invoicesByProductMap = invoices.stream()
-                .filter(i -> i.getDescription() != null && !i.getDescription().isEmpty())
-                .collect(Collectors.groupingBy(Invoice::getDescription, Collectors.counting()));
+                .filter(i -> i.getProductOrService() != null && !i.getProductOrService().isEmpty())
+                .collect(Collectors.groupingBy(Invoice::getProductOrService, Collectors.counting()));
         List<Map<String, Object>> invoicesByProduct = mapToList(invoicesByProductMap, "product", "count");
 
 
