@@ -41,6 +41,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
     searchText: string = '';
     isInvoiceModalOpen = false;
     loading = false;
+    editingInvoiceId: number | null = null;
     successMessage: string | null = null;
     errorMessage: string | null = null;
 
@@ -118,6 +119,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
     }
 
     openInvoiceModal(): void {
+        this.editingInvoiceId = null;
         this.invoiceForm.reset({
             client: '',
             product: '',
@@ -125,6 +127,21 @@ export class ClientInvoiceManagementComponent implements OnInit {
             rate: 0,
             description: '',
             date: new Date().toISOString().split('T')[0]
+        });
+        this.successMessage = null;
+        this.errorMessage = null;
+        this.isInvoiceModalOpen = true;
+    }
+
+    openEditInvoice(invoice: Invoice): void {
+        this.editingInvoiceId = invoice.id ?? null;
+        this.invoiceForm.setValue({
+            client: invoice.client.id,
+            product: invoice.productOrService || '',
+            quantity: invoice.quantity || 1,
+            rate: invoice.rate || 0,
+            description: invoice.description || '',
+            date: invoice.date ? invoice.date : new Date().toISOString().split('T')[0]
         });
         this.successMessage = null;
         this.errorMessage = null;
@@ -187,6 +204,12 @@ export class ClientInvoiceManagementComponent implements OnInit {
             date: formValues.date
         };
 
+        // If editing, skip create flow and call update endpoint
+        if (this.editingInvoiceId) {
+            this.updateInvoice(this.editingInvoiceId, invoicePayload);
+            return;
+        }
+
         this.http.post<any>(`${this.invoiceApiUrl}/validate`, invoicePayload).subscribe({
             next: (response) => {
                 if (response.status === 'VALID') {
@@ -201,6 +224,32 @@ export class ClientInvoiceManagementComponent implements OnInit {
             error: (err) => {
                 console.error('Error validating invoice:', err);
                 this.errorMessage = 'Error validating invoice. Please try again.';
+                this.loading = false;
+            }
+        });
+    }
+
+    updateInvoice(invoiceId: number, invoicePayload: Invoice): void {
+        this.loading = true;
+        const url = `${this.invoiceApiUrl}/${invoiceId}`;
+
+        // Call update endpoint; backend validation may return 409 like create
+        this.http.put<Invoice>(url, invoicePayload).subscribe({
+            next: (updated) => {
+                const client = this.clients.find(c => c.id === updated.client.id);
+                updated.clientName = client?.companyName || 'Unknown';
+
+                // replace in local list
+                this.invoices = this.invoices.map(inv => inv.id === updated.id ? updated : inv);
+                this.filterInvoices();
+                this.successMessage = 'Invoice updated successfully!';
+                this.closeInvoiceModal();
+                this.loading = false;
+                this.editingInvoiceId = null;
+            },
+            error: (err) => {
+                console.error('Error updating invoice:', err);
+                this.errorMessage = 'Error updating invoice. Please try again.';
                 this.loading = false;
             }
         });

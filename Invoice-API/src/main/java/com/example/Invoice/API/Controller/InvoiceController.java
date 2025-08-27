@@ -86,4 +86,36 @@ public class InvoiceController {
     public List<Invoice> searchInvoices(@RequestParam String query) {
         return invoiceRepository.findByInvoiceNumberContainingIgnoreCase(query);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody Invoice invoice, @RequestParam(defaultValue = "false") boolean force) {
+        return invoiceRepository.findById(id).map(existing -> {
+//            if (!force) {
+//                ValidationResult validationResult = invoiceValidationService.validateInvoice(invoice);
+//                if (validationResult != ValidationResult.VALID) {
+//                    return ResponseEntity.status(409).body(Map.of("status", validationResult, "message", getValidationMessage(validationResult)));
+//                }
+//            }
+
+            Long clientId = invoice.getClient().getId();
+            Client client = clientRepository.findById(clientId)
+                    .orElseThrow(() -> new RuntimeException("Client not found with ID: " + clientId));
+
+            // copy updatable fields
+            existing.setClient(client);
+            existing.setProductOrService(invoice.getProductOrService());
+            existing.setQuantity(invoice.getQuantity());
+            existing.setRate(invoice.getRate());
+            existing.setSubtotal(invoice.getSubtotal());
+            existing.setTaxes(invoice.getTaxes());
+            existing.setTotal(invoice.getTotal());
+            existing.setDate(invoice.getDate());
+            existing.setDescription(invoice.getDescription());
+
+            existing.setSuspicious(invoiceValidationService.validateInvoice(existing) == ValidationResult.SUSPICIOUS_INVOICE);
+
+            Invoice saved = invoiceRepository.save(existing);
+            return ResponseEntity.ok(saved);
+        }).orElse(ResponseEntity.notFound().build());
+    }
 }

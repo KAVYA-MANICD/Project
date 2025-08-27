@@ -55,6 +55,9 @@
             <button type="button" class="btn-delete" (click)="deleteInvoice(invoice.id!)" *ngIf="invoice.id" title="Delete Invoice" aria-label="Delete Invoice">
               <i class="fas fa-trash-alt" aria-hidden="true"></i>
             </button>
+              <button type="button" class="btn-edit" (click)="openEditInvoice(invoice)" *ngIf="invoice.id" title="Edit Invoice" aria-label="Edit Invoice">
+                <i class="fas fa-edit" aria-hidden="true"></i>
+              </button>
             <button type="button" class="btn-generate" (click)="generateInvoice(invoice.id!)" *ngIf="invoice.id" title="Generate Invoice" aria-label="Generate Invoice">
               <i class="fas fa-file-invoice" aria-hidden="true"></i>
             </button>
@@ -75,7 +78,7 @@
 <div class="modal" [class.show]="isInvoiceModalOpen">
   <div class="modal-content">
     <div class="modal-header">
-      <h2 class="form-title">Create Invoice</h2>
+      <h2 class="form-title">{{ editingInvoiceId ? 'Edit Invoice' : 'Create Invoice' }}</h2>
       <button class="close" (click)="closeInvoiceModal()">&times;</button>
     </div>
     <div class="form-scroll-container">
@@ -164,7 +167,7 @@
     </div>
     <div class="form-actions">
       <button type="submit" [disabled]="!invoiceForm.valid || loading" class="submit-btn" (click)="onInvoiceSubmit()">
-        {{ loading ? "Processing..." : "Create Invoice" }}
+        {{ loading ? 'Processing...' : (editingInvoiceId ? 'Update Invoice' : 'Create Invoice') }}
       </button>
     </div>
   </div>
