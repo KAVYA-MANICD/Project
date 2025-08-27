@@ -5,31 +5,63 @@
   <div *ngIf="loading">Loading metrics...</div>
   <div *ngIf="error">{{ error }}</div>
 
-  <div *ngIf="!loading && !error">
-    <div class="metric">
-      <h3>Total Invoices</h3>
-      <p>{{ metrics.totalInvoices }}</p>
+  <div *ngIf="!loading && !error" class="dashboard-container">
+    <!-- Top Section: Metric Cards -->
+    <div class="metrics-grid">
+      <app-metric-card
+        title="Total Invoices"
+        [value]="metrics.totalInvoices"
+        icon="file-text"
+        color="blue"
+      ></app-metric-card>
+      <app-metric-card
+        title="Total Revenue"
+        [value]="metrics.totalRevenue | currency:'USD'"
+        icon="dollar-sign"
+        color="green"
+      ></app-metric-card>
+      <app-metric-card
+        title="Average Invoice Value"
+        [value]="metrics.averageInvoiceValue | currency:'USD'"
+        icon="bar-chart"
+        color="orange"
+      ></app-metric-card>
+      <app-metric-card
+        title="Highest Invoice Value"
+        [value]="metrics.highestInvoiceValue | currency:'USD'"
+        icon="arrow-up"
+        color="red"
+      ></app-metric-card>
+      <app-metric-card
+        title="Lowest Invoice Value"
+        [value]="metrics.lowestInvoiceValue | currency:'USD'"
+        icon="arrow-down"
+        color="purple"
+      ></app-metric-card>
     </div>
 
-    <div class="metric">
-      <h3>Total Revenue</h3>
-      <p>{{ metrics.totalRevenue | currency:'USD' }}</p>
-    </div>
-
-    <div class="metric">
-      <h3>Average Invoice Value</h3>
-      <p>{{ metrics.averageInvoiceValue | currency:'USD' }}</p>
-    </div>
-
-    <div class="metric">
-      <h3>Invoices by Month (simple list)</h3>
-      <ul>
-        <li *ngFor="let m of metrics.invoicesPerMonth">{{ m.month }}: {{ m.count }}</li>
-      </ul>
-    </div>
-    <div class="metric">
-      <h3>Invoices by Month (chart)</h3>
-      <canvas id="invoicesChart" width="800" height="320"></canvas>
+    <!-- Bottom Section: Charts -->
+    <div class="charts-grid">
+      <div class="chart-container">
+        <h3>Invoices by Month</h3>
+        <canvas id="invoicesByMonthChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>Revenue by Month</h3>
+        <canvas id="revenueByMonthChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>Average Invoice Value Trend</h3>
+        <canvas id="avgInvoiceValueTrendChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>Invoices by Client</h3>
+        <canvas id="invoicesByClientChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>Invoices by Product/Service</h3>
+        <canvas id="invoicesByProductChart"></canvas>
+      </div>
     </div>
   </div>
 </div>
