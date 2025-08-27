@@ -72,3 +72,50 @@ h3 {
   background-color: #27ae60; /* Darker green on hover */
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
+
+/* Cards layout for the new home sections */
+.cards {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  flex: 1 1 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-icon {
+  color: #2c3e50;
+  margin-bottom: 6px;
+}
+
+.card h4 {
+  margin: 0;
+  font-size: 18px;
+  color: #2c3e50;
+}
+
+.card p {
+  margin: 0;
+  color: #7f8c8d;
+}
+
+/* Header used in intro and section blocks so icon and heading align */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.section-header .card-icon {
+  margin-bottom: 0; /* let layout control spacing */
+}
