@@ -3,16 +3,28 @@ import { CommonModule } from '@angular/common';
 import { Chart, type ChartConfiguration, registerables } from 'chart.js';
 import { SmartAnalyticsService } from './smart-analytics.service';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { MetricCardComponent } from '../metric-card/metric-card.component';
 
 @Component({
   selector: 'app-smart-analytics',
   standalone: true,
-  imports: [CommonModule, NavbarComponent],
+  imports: [CommonModule, NavbarComponent, MetricCardComponent],
   templateUrl: './smart-analytics.component.html',
   styleUrls: ['./smart-analytics.component.css']
 })
 export class SmartAnalyticsComponent implements OnInit {
-  metrics: any = { invoicesPerMonth: [] };
+  metrics: any = {
+    totalInvoices: 0,
+    totalRevenue: 0,
+    averageInvoiceValue: 0,
+    highestInvoiceValue: 0,
+    lowestInvoiceValue: 0,
+    invoicesPerMonth: [],
+    revenuePerMonth: [],
+    avgInvoiceValuePerMonth: [],
+    invoicesByClient: [],
+    invoicesByProduct: []
+  };
   loading = true;
   error: string | null = null;
 
@@ -44,43 +56,37 @@ export class SmartAnalyticsComponent implements OnInit {
     this.loading = true;
     this.analyticsService.getOverview().subscribe({
       next: (data: any) => {
-        this.metrics = data;
-        // prepare chart data
-        const labels = data.invoicesPerMonth.map((m: any) => String(m.month));
-        const datasetRaw = data.invoicesPerMonth.map((m: any) => m.count);
-        // coerce to numbers
-        const dataset = datasetRaw.map((v: any) => Number(v ?? 0));
-        this.chartConfig.data!.labels = labels;
-        // choose chart type: if only one point, use bar for visibility
-        if (dataset.length <= 1) {
-          this.chartConfig.type = 'bar';
-          Object.assign(this.chartConfig.data!.datasets![0], {
-            backgroundColor: 'rgba(33,150,243,0.9)',
-            borderColor: 'rgba(33,150,243,1)',
-            borderWidth: 1
-          });
-        } else {
-          this.chartConfig.type = 'line';
-          Object.assign(this.chartConfig.data!.datasets![0], {
-            backgroundColor: 'rgba(33,150,243,0.2)',
-            borderColor: 'rgba(33,150,243,1)',
-            fill: true,
-            tension: 0.3,
-            pointRadius: 4
-          });
-        }
+        // TODO: Replace with real data from the backend
+        // Mock data for new metrics and charts
+        this.metrics = {
+          ...data,
+          highestInvoiceValue: 5000,
+          lowestInvoiceValue: 100,
+          revenuePerMonth: [
+            { month: 'Jan', revenue: 5000 },
+            { month: 'Feb', revenue: 7000 },
+            { month: 'Mar', revenue: 6000 },
+          ],
+          avgInvoiceValuePerMonth: [
+            { month: 'Jan', value: 500 },
+            { month: 'Feb', value: 550 },
+            { month: 'Mar', value: 520 },
+          ],
+          invoicesByClient: [
+            { client: 'Client A', count: 10 },
+            { client: 'Client B', count: 15 },
+            { client: 'Client C', count: 5 },
+          ],
+          invoicesByProduct: [
+            { product: 'Service X', count: 20 },
+            { product: 'Service Y', count: 8 },
+            { product: 'Service Z', count: 2 },
+          ]
+        };
 
-        this.chartConfig.data!.datasets![0].data = dataset as any[];
-
-        // ensure y axis begins at zero and shows integer ticks for small counts
-        this.chartConfig.options = this.chartConfig.options || {};
-        (this.chartConfig.options as any).scales = (this.chartConfig.options as any).scales || {};
-        (this.chartConfig.options as any).scales.y = { beginAtZero: true, ticks: { stepSize: 1 } };
-
-        // un-hide before rendering so the canvas exists in DOM
         this.loading = false;
-        // short delay to allow Angular to render the canvas
-        setTimeout(() => this.renderChart(), 60);
+        // Render all charts after a short delay
+        setTimeout(() => this.renderAllCharts(), 60);
       },
       error: (err: any) => {
         this.error = err?.message || 'Failed to load analytics';
@@ -89,50 +95,133 @@ export class SmartAnalyticsComponent implements OnInit {
     });
   }
 
-  renderChart() {
-    try {
-      const ctx = (document.getElementById('invoicesChart') as HTMLCanvasElement | null)?.getContext('2d');
-      if (!ctx) {
-        console.warn('Canvas context not found for invoicesChart');
-        return;
-      }
-      if (this.chart) {
-        this.chart.destroy();
-      }
-  // ensure responsive and sizing
-  this.chartConfig.options = this.chartConfig.options || {};
-  (this.chartConfig.options as any).responsive = true;
-  (this.chartConfig.options as any).maintainAspectRatio = false;
-  (this.chartConfig.options as any).scales = (this.chartConfig.options as any).scales || { y: { beginAtZero: true } };
+  private charts: Chart[] = [];
 
-  console.debug('Rendering chart with', this.chartConfig.data?.labels, this.chartConfig.data?.datasets?.[0]?.data);
-      try {
-        this.chart = new Chart(ctx, this.chartConfig as any);
-      } catch (chartErr) {
-        console.warn('Chart.js render failed, drawing fallback', chartErr);
-        // simple fallback draw: draw bars proportional to data
-        const data = (this.chartConfig.data?.datasets?.[0].data || []) as number[];
-        const labels = (this.chartConfig.data?.labels || []) as string[];
-        // clear canvas
-        const canvas = ctx.canvas;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        if (data.length === 0) return;
-        const max = Math.max(...data);
-        const padding = 20;
-        const barWidth = (canvas.width - padding * 2) / data.length * 0.7;
-        data.forEach((v, i) => {
-          const h = (v / (max || 1)) * (canvas.height - padding * 2);
-          const x = padding + i * ((canvas.width - padding * 2) / data.length) + ((canvas.width - padding * 2) / data.length - barWidth) / 2;
-          const y = canvas.height - padding - h;
-          ctx.fillStyle = 'rgba(33,150,243,0.8)';
-          ctx.fillRect(x, y, barWidth, h);
-          ctx.fillStyle = '#222';
-          ctx.font = '12px sans-serif';
-          ctx.fillText(labels[i] || String(i), x, canvas.height - 6);
-        });
-      }
-    } catch (e) {
-      console.error('Chart render failed', e);
+  renderAllCharts() {
+    this.renderInvoicesByMonthChart();
+    this.renderRevenueByMonthChart();
+    this.renderAvgInvoiceValueTrendChart();
+    this.renderInvoicesByClientChart();
+    this.renderInvoicesByProductChart();
+  }
+
+  createChart(canvasId: string, config: ChartConfiguration): Chart | null {
+    const ctx = (document.getElementById(canvasId) as HTMLCanvasElement | null)?.getContext('2d');
+    if (!ctx) {
+      console.warn(`Canvas context not found for ${canvasId}`);
+      return null;
     }
+
+    // Destroy existing chart if it exists
+    const existingChart = this.charts.find(c => c.canvas.id === canvasId);
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    const newChart = new Chart(ctx, config);
+    this.charts.push(newChart);
+    return newChart;
+  }
+
+  renderInvoicesByMonthChart() {
+    const labels = this.metrics.invoicesPerMonth.map((m: any) => m.month);
+    const data = this.metrics.invoicesPerMonth.map((m: any) => m.count);
+
+    this.createChart('invoicesByMonthChart', {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Invoices',
+          data,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+
+  renderRevenueByMonthChart() {
+    const labels = this.metrics.revenuePerMonth.map((m: any) => m.month);
+    const data = this.metrics.revenuePerMonth.map((m: any) => m.revenue);
+
+    this.createChart('revenueByMonthChart', {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Revenue',
+          data,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 2,
+          fill: true
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+
+  renderAvgInvoiceValueTrendChart() {
+    const labels = this.metrics.avgInvoiceValuePerMonth.map((m: any) => m.month);
+    const data = this.metrics.avgInvoiceValuePerMonth.map((m: any) => m.value);
+
+    this.createChart('avgInvoiceValueTrendChart', {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Average Value',
+          data,
+          backgroundColor: 'rgba(255, 159, 64, 0.2)',
+          borderColor: 'rgba(255, 159, 64, 1)',
+          borderWidth: 2,
+          fill: true
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+
+  renderInvoicesByClientChart() {
+    const labels = this.metrics.invoicesByClient.map((c: any) => c.client);
+    const data = this.metrics.invoicesByClient.map((c: any) => c.count);
+
+    this.createChart('invoicesByClientChart', {
+      type: 'pie',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Invoices by Client',
+          data,
+          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+
+  renderInvoicesByProductChart() {
+    const labels = this.metrics.invoicesByProduct.map((p: any) => p.product);
+    const data = this.metrics.invoicesByProduct.map((p: any) => p.count);
+
+    this.createChart('invoicesByProductChart', {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Invoices by Product/Service',
+          data,
+          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.charts.forEach(chart => chart.destroy());
   }
 }
