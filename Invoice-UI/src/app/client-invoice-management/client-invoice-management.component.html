@@ -54,13 +54,13 @@
           <td>{{ invoice.total | currency }}</td>
           <td>{{ invoice.date | date : "shortDate" }}</td>
           <td class="action-buttons">
-            <button class="btn-delete" (click)="deleteInvoice(invoice.id!)" *ngIf="invoice.id">
+            <button class="btn-delete" (click)="deleteInvoice(invoice.id!)" *ngIf="invoice.id" title="Delete Invoice">
               <i class="fas fa-trash"></i>
             </button>
-            <button class="btn-generate" (click)="generateInvoice(invoice.id!)" *ngIf="invoice.id">
+            <button class="btn-generate" (click)="generateInvoice(invoice.id!)" *ngIf="invoice.id" title="Generate Invoice">
               <i class="fas fa-file-invoice"></i>
             </button>
-            <button class="btn-download" (click)="downloadInvoice(invoice.id!)" *ngIf="invoice.id">
+            <button class="btn-download" (click)="downloadInvoice(invoice.id!)" *ngIf="invoice.id" title="Download PDF">
               <i class="fas fa-download"></i>
             </button>
           </td>

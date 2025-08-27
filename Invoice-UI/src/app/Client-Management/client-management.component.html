@@ -51,10 +51,10 @@
           <td>{{ client.billingAddress }}</td>
           <td>{{ client.taxId }}</td>
           <td class="action-buttons">
-            <button class="btn-edit" (click)="editClient(client)">
+            <button class="btn-edit" (click)="editClient(client)" title="Edit Client">
               <i class="fas fa-edit"></i>
             </button>
-            <button class="btn-delete" (click)="deleteClient(client.id)">
+            <button class="btn-delete" (click)="deleteClient(client.id)" title="Delete Client">
               <i class="fas fa-trash"></i>
             </button>
           </td>
