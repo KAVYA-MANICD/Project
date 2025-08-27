@@ -15,7 +15,7 @@ interface Invoice {
     id?: number;
     invoiceNumber?: string;
     client: { id: number };
-    clientName?: string; 
+    clientName?: string;
     productOrService: string;
     quantity: number;
     rate: number;
@@ -43,6 +43,10 @@ export class ClientInvoiceManagementComponent implements OnInit {
     loading = false;
     successMessage: string | null = null;
     errorMessage: string | null = null;
+
+    isWarningModalOpen = false;
+    warningMessage = '';
+    private invoicePayloadForProceed: Invoice | null = null;
 
     private invoiceApiUrl = 'http://localhost:8080/invoices';
     private clientsApiUrl = 'http://localhost:8080/clients/all';
@@ -127,6 +131,18 @@ export class ClientInvoiceManagementComponent implements OnInit {
         this.isInvoiceModalOpen = false;
     }
 
+    closeWarningModal(): void {
+        this.isWarningModalOpen = false;
+        this.invoicePayloadForProceed = null;
+    }
+
+    proceedWithInvoiceCreation(): void {
+        if (this.invoicePayloadForProceed) {
+            this._createInvoice(this.invoicePayloadForProceed, true);
+            this.closeWarningModal();
+        }
+    }
+
     calculateSubtotal(): number {
         const { quantity, rate } = this.invoiceForm.value;
         return quantity * rate;
@@ -163,10 +179,37 @@ export class ClientInvoiceManagementComponent implements OnInit {
             subtotal,
             taxes,
             total,
-            description: formValues.description
+            description: formValues.description,
+            date: new Date().toISOString().split('T')[0]
         };
 
-        this.http.post<Invoice>(`${this.invoiceApiUrl}/add`, invoicePayload).subscribe({
+        this.http.post<any>(`${this.invoiceApiUrl}/validate`, invoicePayload).subscribe({
+            next: (response) => {
+                if (response.status === 'VALID') {
+                    this._createInvoice(invoicePayload);
+                } else {
+                    this.warningMessage = response.message;
+                    this.invoicePayloadForProceed = invoicePayload;
+                    this.isWarningModalOpen = true;
+                    this.loading = false;
+                }
+            },
+            error: (err) => {
+                console.error('Error validating invoice:', err);
+                this.errorMessage = 'Error validating invoice. Please try again.';
+                this.loading = false;
+            }
+        });
+    }
+
+    private _createInvoice(invoice: Invoice, force = false): void {
+        this.loading = true;
+        let url = `${this.invoiceApiUrl}/add`;
+        if (force) {
+            url += '?force=true';
+        }
+
+        this.http.post<Invoice>(url, invoice).subscribe({
             next: (newInvoice) => {
                 const client = this.clients.find(c => c.id === newInvoice.client.id);
                 newInvoice.clientName = client?.companyName || 'Unknown';
@@ -218,7 +261,6 @@ export class ClientInvoiceManagementComponent implements OnInit {
         }
     }
 
-    // ✅ Updated downloadInvoice: opens print dialog for "Save as PDF"
     downloadInvoice(invoiceId: number): void {
         const invoice = this.invoices.find(inv => inv.id === invoiceId);
         if (!invoice) {
@@ -236,8 +278,6 @@ export class ClientInvoiceManagementComponent implements OnInit {
             printWindow.onload = () => {
                 printWindow.focus();
                 printWindow.print();
-                // Optional: close after print
-                // printWindow.onafterprint = () => printWindow.close();
             };
         } else {
             this.errorMessage = 'Unable to open print window.';
@@ -274,7 +314,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
         <title>Invoice #${invoice.invoiceNumber || ''}</title>
         <style>
             body { font-family: Arial, sans-serif; margin: 20px; font-size: 14px; color: #333; }
-            .invoice-container { max-width: 800px; margin: auto; padding: 20px; } /* ✅ No border here */
+            .invoice-container { max-width: 800px; margin: auto; padding: 20px; }
             header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
             .company-details { font-weight: bold; font-size: 18px; }
             .invoice-details { text-align: right; }

@@ -44,6 +44,8 @@ public class Invoice {
 
     private String description;
 
+    private boolean isSuspicious;
+
     // Static map to track daily invoice counters
     private static final Map<String, Integer> dailyInvoiceCounter = new HashMap<>();
 
