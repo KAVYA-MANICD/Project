@@ -69,7 +69,6 @@
   flex-grow: 1;
   max-width: 500px;
   min-width: 200px;
-  position: relative;
   display: flex;
   align-items: center;
 }
@@ -404,36 +403,4 @@ textarea.form-input {
 }
 
 /* Voice modal styles */
-.mic-btn {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  color: #555;
-  font-size: 1.2rem;
-}
-
-.mic-btn:hover {
-  color: #007bff;
-}
-
-.mic-btn.listening {
-  color: #d93025;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: translateY(-50%) scale(1);
-  }
-  50% {
-    transform: translateY(-50%) scale(1.2);
-  }
-  100% {
-    transform: translateY(-50%) scale(1);
-  }
-}
+/* voice-search UI removed */

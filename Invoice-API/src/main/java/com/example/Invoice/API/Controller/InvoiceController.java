@@ -90,12 +90,12 @@ public class InvoiceController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody Invoice invoice, @RequestParam(defaultValue = "false") boolean force) {
         return invoiceRepository.findById(id).map(existing -> {
-            if (!force) {
-                ValidationResult validationResult = invoiceValidationService.validateInvoice(invoice);
-                if (validationResult != ValidationResult.VALID) {
-                    return ResponseEntity.status(409).body(Map.of("status", validationResult, "message", getValidationMessage(validationResult)));
-                }
-            }
+//            if (!force) {
+//                ValidationResult validationResult = invoiceValidationService.validateInvoice(invoice);
+//                if (validationResult != ValidationResult.VALID) {
+//                    return ResponseEntity.status(409).body(Map.of("status", validationResult, "message", getValidationMessage(validationResult)));
+//                }
+//            }
 
             Long clientId = invoice.getClient().getId();
             Client client = clientRepository.findById(clientId)

@@ -49,7 +49,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
 
     isWarningModalOpen = false;
     warningMessage = '';
-    private invoicePayloadForProceed: { payload: Invoice, isUpdate: boolean, updateId?: number } | null = null;
+    private invoicePayloadForProceed: Invoice | null = null;
 
     private invoiceApiUrl = 'http://localhost:8080/invoices';
     private clientsApiUrl = 'http://localhost:8080/clients/all';
@@ -63,8 +63,6 @@ export class ClientInvoiceManagementComponent implements OnInit {
         phone: '91+ 7259489277',
         email: 'jupiterkingtechnology@gmail.com'
     };
-
-    isListening = false;
 
     constructor(
         private fb: FormBuilder,
@@ -144,33 +142,6 @@ export class ClientInvoiceManagementComponent implements OnInit {
         });
     }
 
-    voiceSearch(): void {
-        if ('webkitSpeechRecognition' in window) {
-            const recognition = new (window as any).webkitSpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'en-US';
-
-            recognition.onstart = () => {
-                this.isListening = true;
-            };
-
-            recognition.onend = () => {
-                this.isListening = false;
-            };
-
-            recognition.onresult = (event: any) => {
-                const transcript = event.results[0][0].transcript;
-                this.searchText = transcript;
-                this.filterInvoices();
-            };
-
-            recognition.start();
-        } else {
-            alert('Voice recognition is not supported in your browser.');
-        }
-    }
-
     openInvoiceModal(): void {
         this.editingInvoiceId = null;
         this.invoiceForm.reset({
@@ -212,11 +183,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
 
     proceedWithInvoiceCreation(): void {
         if (this.invoicePayloadForProceed) {
-            if (this.invoicePayloadForProceed.isUpdate && this.invoicePayloadForProceed.updateId) {
-                this.updateInvoice(this.invoicePayloadForProceed.updateId, this.invoicePayloadForProceed.payload, true);
-            } else {
-                this._createInvoice(this.invoicePayloadForProceed.payload, true);
-            }
+            this._createInvoice(this.invoicePayloadForProceed, true);
             this.closeWarningModal();
         }
     }
@@ -261,25 +228,8 @@ export class ClientInvoiceManagementComponent implements OnInit {
             date: formValues.date
         };
 
-        // If editing, validate first and call update endpoint (reuse create validation)
         if (this.editingInvoiceId) {
-            this.http.post<any>(`${this.invoiceApiUrl}/validate`, invoicePayload).subscribe({
-                next: (response) => {
-                    if (response.status === 'VALID') {
-                        this.updateInvoice(this.editingInvoiceId as number, invoicePayload);
-                    } else {
-                        this.warningMessage = response.message;
-                        this.invoicePayloadForProceed = { payload: invoicePayload, isUpdate: true, updateId: this.editingInvoiceId as number };
-                        this.isWarningModalOpen = true;
-                        this.loading = false;
-                    }
-                },
-                error: (err) => {
-                    console.error('Error validating invoice:', err);
-                    this.errorMessage = 'Error validating invoice. Please try again.';
-                    this.loading = false;
-                }
-            });
+            this.updateInvoice(this.editingInvoiceId, invoicePayload);
             return;
         }
 
@@ -289,7 +239,7 @@ export class ClientInvoiceManagementComponent implements OnInit {
                     this._createInvoice(invoicePayload);
                 } else {
                     this.warningMessage = response.message;
-                    this.invoicePayloadForProceed = { payload: invoicePayload, isUpdate: false };
+                    this.invoicePayloadForProceed = invoicePayload;
                     this.isWarningModalOpen = true;
                     this.loading = false;
                 }
@@ -302,10 +252,9 @@ export class ClientInvoiceManagementComponent implements OnInit {
         });
     }
 
-    updateInvoice(invoiceId: number, invoicePayload: Invoice, force: boolean = false): void {
+    updateInvoice(invoiceId: number, invoicePayload: Invoice): void {
         this.loading = true;
-        let url = `${this.invoiceApiUrl}/${invoiceId}`;
-        if (force) url += '?force=true';
+        const url = `${this.invoiceApiUrl}/${invoiceId}`;
 
         this.http.put<Invoice>(url, invoicePayload).subscribe({
             next: (updated) => {
@@ -318,17 +267,8 @@ export class ClientInvoiceManagementComponent implements OnInit {
                 this.closeInvoiceModal();
                 this.loading = false;
                 this.editingInvoiceId = null;
-                this.invoicePayloadForProceed = null;
             },
             error: (err) => {
-                // If backend responded with 409 and a message, surface warning modal
-                if (err && err.status === 409 && err.error && err.error.message) {
-                    this.warningMessage = err.error.message;
-                    this.invoicePayloadForProceed = { payload: invoicePayload, isUpdate: true, updateId: invoiceId };
-                    this.isWarningModalOpen = true;
-                    this.loading = false;
-                    return;
-                }
                 console.error('Error updating invoice:', err);
                 this.errorMessage = 'Error updating invoice. Please try again.';
                 this.loading = false;

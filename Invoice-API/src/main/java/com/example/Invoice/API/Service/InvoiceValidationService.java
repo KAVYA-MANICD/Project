@@ -37,10 +37,6 @@ public class InvoiceValidationService {
                 invoice.getTotal(),
                 invoice.getDate()
         );
-        // If this is an update (invoice has id), exclude the current invoice from duplicate detection
-        if (invoice.getId() != null) {
-            return duplicates.stream().anyMatch(inv -> !invoice.getId().equals(inv.getId()));
-        }
         return !duplicates.isEmpty();
     }
 }
