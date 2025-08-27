@@ -107,3 +107,10 @@
     display: none;
   }
 }
+
+.sidebar ul li a.active,
+.sidemenu ul li a.active {
+  background-color: #34495e;
+  font-weight: 500;
+  color: #fff;
+}
