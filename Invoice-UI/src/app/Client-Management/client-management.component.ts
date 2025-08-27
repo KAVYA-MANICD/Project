@@ -151,32 +151,5 @@ export class ClientManagementComponent implements OnInit {
     return field ? field.invalid && (field.dirty || field.touched) : false;
   }
 
-  isListening = false;
 
-  voiceSearch(): void {
-    if ('webkitSpeechRecognition' in window) {
-      const recognition = new (window as any).webkitSpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = 'en-US';
-
-      recognition.onstart = () => {
-        this.isListening = true;
-      };
-
-      recognition.onend = () => {
-        this.isListening = false;
-      };
-
-      recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        this.searchText = transcript;
-        this.filterClients();
-      };
-
-      recognition.start();
-    } else {
-      alert('Voice recognition is not supported in your browser.');
-    }
-  }
 }

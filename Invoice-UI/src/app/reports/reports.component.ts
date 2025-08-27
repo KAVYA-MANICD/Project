@@ -4,6 +4,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { ProductServiceService } from '../product-service.service';
 
 @Component({
   selector: 'app-reports',
@@ -13,7 +14,10 @@ import 'jspdf-autotable';
   styleUrls: ['./reports.component.css']
 })
 export class ReportsComponent {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private productServiceService: ProductServiceService
+  ) {}
 
   generateClientReport() {
     this.http.get<any[]>('http://localhost:8080/clients/all').subscribe({
@@ -66,7 +70,7 @@ export class ReportsComponent {
             }
 
             const text = `${this.formatKey(key)}: ${valueString}`;
-            const splitText = doc.splitTextToSize(text, 180); // 180 is width of page minus margins
+            const splitText = doc.splitTextToSize(text, 180);
             doc.text(splitText, 14, y);
             y += (splitText.length * 10);
           }
@@ -75,6 +79,22 @@ export class ReportsComponent {
       },
       error: (err) => {
         console.error('Error generating summary report:', err);
+      }
+    });
+  }
+
+  generateProductServiceReport() {
+    this.productServiceService.getProductServices().subscribe({
+      next: (productServices) => {
+        const doc = new jsPDF();
+        (doc as any).autoTable({
+          head: [['ID', 'Name', 'Price']],
+          body: productServices.map(p => [p.id, p.name, p.price]),
+        });
+        doc.save('product-service-report.pdf');
+      },
+      error: (err) => {
+        console.error('Error generating product/service report:', err);
       }
     });
   }
