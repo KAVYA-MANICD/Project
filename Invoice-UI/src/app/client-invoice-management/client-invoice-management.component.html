@@ -25,7 +25,10 @@
         [(ngModel)]="searchText"
         (input)="filterInvoices()"
       />
-      
+      <button (click)="voiceSearch()" class="mic-btn" [class.listening]="isListening"
+              title="{{ isListening ? 'Listening...' : 'Search with voice' }}">
+        <i class="fas fa-microphone"></i>
+      </button>
     </div>
     <button class="create-btn" (click)="openInvoiceModal()">
       <i class="fas fa-plus"></i> Create Invoice
