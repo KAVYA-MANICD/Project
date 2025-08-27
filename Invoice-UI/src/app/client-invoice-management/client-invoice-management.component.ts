@@ -299,7 +299,34 @@ export class ClientInvoiceManagementComponent implements OnInit {
         });
     }
 
-    // voice search removed
+    isListening = false;
+
+    voiceSearch(): void {
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new (window as any).webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+                this.isListening = true;
+            };
+
+            recognition.onend = () => {
+                this.isListening = false;
+            };
+
+            recognition.onresult = (event: any) => {
+                const transcript = event.results[0][0].transcript;
+                this.searchText = transcript;
+                this.filterInvoices();
+            };
+
+            recognition.start();
+        } else {
+            alert('Voice recognition is not supported in your browser.');
+        }
+    }
 
     downloadInvoice(invoiceId: number): void {
         const invoice = this.invoices.find(inv => inv.id === invoiceId);
