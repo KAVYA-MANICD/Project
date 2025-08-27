@@ -8,6 +8,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { UtilityExpensesComponent } from './utility-expenses/utility-expenses.component';
 import { ClientManagementComponent } from './Client-Management/client-management.component';
 import { ClientInvoiceManagementComponent } from './client-invoice-management/client-invoice-management.component'; // Import the component
+import { ProductServiceManagementComponent } from './product-service-management/product-service-management.component';
 import { ReportsComponent } from './reports/reports.component';
 import { SmartAnalyticsComponent } from './smart-analytics/smart-analytics.component';
 
@@ -23,5 +24,6 @@ export const routes: Routes = [
     { path: 'clients', component: ClientManagementComponent },
     { path: 'client-invoice', component: ClientInvoiceManagementComponent } // Added route for Client Invoice Management
     ,{ path: 'analytics', component: SmartAnalyticsComponent },
-    { path: 'reports', component: ReportsComponent }
+    { path: 'reports', component: ReportsComponent },
+    { path: 'product-services', component: ProductServiceManagementComponent }
 ];
