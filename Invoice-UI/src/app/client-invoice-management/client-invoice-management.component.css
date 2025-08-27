@@ -79,7 +79,7 @@
 
 .search-input {
   width: 100%;
-  padding: 0.75rem 3rem 0.75rem 1rem;
+  padding: 0.75rem 3.5rem 0.75rem 1rem; /* Increased right padding */
   border: 1px solid #dcdfe6;
   border-radius: 8px;
   font-size: 1rem;
@@ -103,6 +103,7 @@
   font-size: 1.2rem;
   color: #627d98;
   padding: 0.5rem;
+  z-index: 10;
 }
 
 .mic-btn:hover {
@@ -179,11 +180,11 @@
 .btn-delete,
 .btn-generate,
 .btn-download {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.1rem;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
