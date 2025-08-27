@@ -29,7 +29,7 @@ interface Invoice {
 @Component({
     selector: 'app-client-invoice-management',
     standalone: true,
-    imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterModule, NavbarComponent],
+    imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterModule],
     templateUrl: './client-invoice-management.component.html',
     styleUrls: ['./client-invoice-management.component.css']
 })
