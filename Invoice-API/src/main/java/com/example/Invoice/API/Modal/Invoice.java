@@ -1,6 +1,7 @@
 package com.example.Invoice.API.Modal;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.text.SimpleDateFormat;
@@ -40,6 +41,7 @@ public class Invoice {
 
     private Double total;
 
+    @NotNull
     private LocalDate date;
 
     private String description;
