@@ -36,7 +36,7 @@ public class AiChatController {
     public Map<String, String> chat(@RequestBody Map<String, String> request) {
         String message = request.get("message");
         String dbSchema = queryAllTables();
-        String prompt = "Given the following database schema and data:\n" + dbSchema + "\n\n" + message;
+        String prompt = "Given the following database schema and json data, provide insights to user on below Query. Avoid any technical details and provide more natural language and business centric response:\n" + "SCHEMA: " + dbSchema + "\n\n" + "User query"+ message;
 
         String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent";
 
