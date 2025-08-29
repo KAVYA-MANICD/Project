@@ -24,14 +24,20 @@ export class InvoiceAiChatComponent {
       this.userInput = '';
 
       this.invoiceAiChatService.sendMessage(userMessage)
-        .subscribe(
-          (response) => {
-            this.messages.push({ text: response.response, sender: 'bot' });
-          },
-          (error) => {
-            this.messages.push({ text: 'Error fetching response from the server.', sender: 'bot' });
+      .subscribe(
+        (response) => {
+          try {
+            const parsedResponse = JSON.parse(response.response);
+            const text = parsedResponse.candidates[0].content.parts[0].text;
+            this.messages.push({ text: text, sender: 'bot' });
+          } catch (e) {
+            this.messages.push({ text: 'Error parsing response from the server.', sender: 'bot' });
           }
-        );
+        },
+        (error) => {
+          this.messages.push({ text: 'Error fetching response from the server.', sender: 'bot' });
+        }
+      );
     }
   }
 }
