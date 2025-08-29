@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { InvoiceAiChatService } from './invoice-ai-chat.service';
 import { HttpClientModule } from '@angular/common/http';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-invoice-ai-chat',
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule],
+  imports: [FormsModule, CommonModule, HttpClientModule, NavbarComponent],
   templateUrl: './invoice-ai-chat.component.html',
   styleUrls: ['./invoice-ai-chat.component.css']
 })

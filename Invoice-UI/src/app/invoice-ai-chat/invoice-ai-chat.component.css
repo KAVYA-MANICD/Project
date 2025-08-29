@@ -1,12 +1,32 @@
+.content {
+  margin-left: 10px;
+  padding: 1rem 2rem;
+}
+
+.topbar {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.topbar-content p {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #102a43;
+}
+
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 100px);
   max-width: 800px;
   margin: 0 auto;
   border: 1px solid #ccc;
   border-radius: 8px;
   overflow: hidden;
+  height: 60vh;
 }
 
 .chat-messages {

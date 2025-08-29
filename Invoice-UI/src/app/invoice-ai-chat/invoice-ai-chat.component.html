@@ -1,11 +1,21 @@
-<div class="chat-container">
-  <div class="chat-messages">
-    <div *ngFor="let message of messages" class="message" [ngClass]="{'user-message': message.sender === 'user', 'bot-message': message.sender === 'bot'}">
-      <p>{{ message.text }}</p>
+<app-navbar></app-navbar>
+
+<div class="content">
+  <div class="topbar">
+    <div class="topbar-content">
+      <p>Invoice AI</p>
     </div>
   </div>
-  <div class="chat-input">
-    <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()" placeholder="Type your message...">
-    <button (click)="sendMessage()">Send</button>
+
+  <div class="chat-container">
+    <div class="chat-messages">
+      <div *ngFor="let message of messages" class="message" [ngClass]="{'user-message': message.sender === 'user', 'bot-message': message.sender === 'bot'}">
+        <p>{{ message.text }}</p>
+      </div>
+    </div>
+    <div class="chat-input">
+      <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()" placeholder="Type your message...">
+      <button (click)="sendMessage()">Send</button>
+    </div>
   </div>
 </div>
