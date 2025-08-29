@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { InvoiceAiChatService } from './invoice-ai-chat.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-invoice-ai-chat',
@@ -14,7 +15,7 @@ export class InvoiceAiChatComponent {
   userInput: string = '';
   messages: { text: string, sender: 'user' | 'bot' }[] = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private invoiceAiChatService: InvoiceAiChatService) { }
 
   sendMessage() {
     if (this.userInput.trim()) {
@@ -22,7 +23,7 @@ export class InvoiceAiChatComponent {
       const userMessage = this.userInput;
       this.userInput = '';
 
-      this.http.post<{ response: string }>('/api/chat/ai', { message: userMessage })
+      this.invoiceAiChatService.sendMessage(userMessage)
         .subscribe(
           (response) => {
             this.messages.push({ text: response.response, sender: 'bot' });
