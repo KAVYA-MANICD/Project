@@ -13,6 +13,14 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styleUrls: ['./client-management.component.css']
 })
 export class ClientManagementComponent implements OnInit {
+proceedWithInvoiceCreation() {
+throw new Error('Method not implemented.');
+}
+isWarningModalOpen: any;
+warningMessage: any;
+closeWarningModal() {
+throw new Error('Method not implemented.');
+}
   clientForm!: FormGroup;
   clients: any[] = [];
   filteredClients: any[] = [];
@@ -169,10 +177,15 @@ export class ClientManagementComponent implements OnInit {
       };
 
       recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        this.searchText = transcript;
-        this.filterClients();
-      };
+    let transcript: string = event.results[0][0].transcript;
+
+    // Remove trailing dot (.) if it exists
+    transcript = transcript.replace(/\.$/, '');
+
+    this.searchText = transcript;
+    this.filterClients();
+};
+
 
       recognition.start();
     } else {

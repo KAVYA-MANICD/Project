@@ -69,6 +69,26 @@
       No clients found.
     </p>
   </div>
+
+
+
+
+
+
+  <div class="modal" [class.show]="isWarningModalOpen" style="z-index: 1050;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="form-title" style="color: #c72a42;">Warning</h2>
+      <button class="close" (click)="closeWarningModal()">&times;</button>
+    </div>
+    <div class="form-scroll-container">
+      <p>{{ warningMessage }}</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeWarningModal()">Cancel</button>
+      <button class="btn-primary" (click)="proceedWithInvoiceCreation()">Ignore & Proceed</button>
+    </div>
+  </div>
 </div>
 
 
